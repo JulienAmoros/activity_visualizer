@@ -2,6 +2,7 @@ import { ActivityManager } from './modules/ActivityManager';
 import { DataLoaderFactory } from './modules/DataLoader';
 import { TimetableManager } from './modules/TimetableManager';
 import 'vis-timeline/styles/vis-timeline-graph2d.css';
+import './styles.css';
 
 // Constants
 const STATUS_DISPLAY_TIMEOUT = 5000;
@@ -37,7 +38,7 @@ function showStatus(message: string, isError: boolean = false) {
 // Update visualization
 function updateVisualization() {
   const activities = activityManager.getActivities();
-  
+
   if (activities.length === 0) {
     visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
     return;
@@ -46,14 +47,14 @@ function updateVisualization() {
   timetableManager.clearTimetables();
   timetableManager.addActivities(activities);
   timetableManager.initializeTimeline(visualization, activities);
-  
+
   showStatus(`Successfully loaded ${activities.length} activities`);
 }
 
 // Update hours display
 function updateHoursDisplay() {
   const dates = timetableManager.getAllDates();
-  
+
   if (dates.length === 0) {
     hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No dates with tracked hours yet.</p>';
     return;
@@ -63,7 +64,7 @@ function updateHoursDisplay() {
     .map(date => {
       const hours = timetableManager.getHoursWorked(date);
       if (hours === 0) return '';
-      
+
       return `
         <div class="hours-item">
           <span class="date">${date.toLocaleDateString()}</span>
@@ -85,7 +86,7 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
     const text = await file.text();
     const loader = DataLoaderFactory.getLoader(fileType);
     const activities = await loader.load(text);
-    
+
     if (activities.length === 0) {
       showStatus('No activities found in the file', true);
       return;
@@ -135,17 +136,17 @@ clearBtn.addEventListener('click', () => {
 setHoursBtn.addEventListener('click', () => {
   const date = dateInput.valueAsDate;
   const hours = parseFloat(hoursInput.value);
-  
+
   if (!date) {
     showStatus('Please select a date', true);
     return;
   }
-  
+
   if (isNaN(hours) || hours < 0 || hours > 24) {
     showStatus('Please enter valid hours (0-24)', true);
     return;
   }
-  
+
   timetableManager.setHoursWorked(date, hours);
   updateHoursDisplay();
   showStatus(`Set ${hours} hours for ${date.toLocaleDateString()}`);
