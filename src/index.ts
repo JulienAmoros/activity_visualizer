@@ -30,7 +30,7 @@ function showStatus(message: string, isError: boolean = false) {
   statusDiv.textContent = message;
   statusDiv.className = `status-message ${isError ? 'error' : 'success'}`;
   setTimeout(() => {
-    statusDiv.style.display = 'none';
+    statusDiv.className = 'status-message';
   }, STATUS_DISPLAY_TIMEOUT);
 }
 
