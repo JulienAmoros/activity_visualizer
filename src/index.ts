@@ -68,7 +68,7 @@ function updateHoursDisplay() {
 
       return `
         <div class="hours-item">
-          <span class="date">${date.toLocaleDateString()}</span>
+          <span class="date">${date.toISOString().split('T')[0]}</span>
           <span class="hours">${hours}h</span>
         </div>
       `;
@@ -118,7 +118,7 @@ function updateHoursForCurrentDate() {
 
   timetableManager.setHoursWorked(date, hours);
   updateHoursDisplay();
-  showStatus(`Set ${hours} hours for ${date.toLocaleDateString()}`);
+  showStatus(`Set ${hours} hours for ${date.toISOString().split('T')[0]}`);
   hoursInput.value = '';
 }
 
