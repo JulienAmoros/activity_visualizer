@@ -1,0 +1,11 @@
+title,start,end,description,location
+Team Meeting,2025-01-15T09:00:00,2025-01-15T10:00:00,Weekly team standup meeting,Conference Room A
+Code Review,2025-01-15T14:00:00,2025-01-15T15:30:00,Review pull requests,Office
+Client Call,2025-01-16T11:00:00,2025-01-16T12:00:00,Discussion with client about project requirements,Virtual
+Development Work,2025-01-16T13:00:00,2025-01-16T17:00:00,Working on new features,Office
+Project Planning,2025-01-17T10:00:00,2025-01-17T11:30:00,Q1 planning session,Conference Room B
+Training Session,2025-01-17T14:00:00,2025-01-17T16:00:00,TypeScript advanced training,Training Room
+Lunch Break,2025-01-18T12:00:00,2025-01-18T13:00:00,Team lunch,Restaurant
+Sprint Review,2025-01-18T15:00:00,2025-01-18T16:00:00,Demonstration of completed work,Conference Room A
+Documentation,2025-01-19T09:00:00,2025-01-19T11:00:00,Update project documentation,Office
+Bug Fixing,2025-01-19T13:00:00,2025-01-19T17:00:00,Resolving critical bugs,Office
