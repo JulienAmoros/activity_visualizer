@@ -101,10 +101,10 @@ Standard MBOX email format with Date and Subject headers.
 
 ## Dependencies
 
-- **csv**: CSV parsing
-- **ical.js**: iCalendar format parsing
-- **node-mbox**: MBOX email format parsing
+- **ical.js**: iCalendar format parsing (browser-compatible)
 - **vis-timeline**: Timeline visualization
+
+Note: CSV and MBOX parsing are implemented with custom parsers for browser compatibility.
 
 ## Development Dependencies
 

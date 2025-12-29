@@ -11,6 +11,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    // Disable Node.js polyfills for browser compatibility
+    // Note: node-mbox is not used in browser, only parsing is done client-side
     fallback: {
       "fs": false,
       "crypto": false,

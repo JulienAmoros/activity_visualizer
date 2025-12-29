@@ -12,9 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "csv": "^6.4.1",
     "ical.js": "^2.2.1",
-    "node-mbox": "^2.0.0",
     "vis-timeline": "^8.5.0"
   },
   "devDependencies": {

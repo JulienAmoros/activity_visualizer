@@ -3,6 +3,9 @@ import { DataLoaderFactory } from './modules/DataLoader';
 import { TimetableManager } from './modules/TimetableManager';
 import 'vis-timeline/styles/vis-timeline-graph2d.css';
 
+// Constants
+const STATUS_DISPLAY_TIMEOUT = 5000;
+
 // Initialize managers
 const activityManager = new ActivityManager();
 const timetableManager = new TimetableManager();
@@ -28,7 +31,7 @@ function showStatus(message: string, isError: boolean = false) {
   statusDiv.className = `status-message ${isError ? 'error' : 'success'}`;
   setTimeout(() => {
     statusDiv.style.display = 'none';
-  }, 5000);
+  }, STATUS_DISPLAY_TIMEOUT);
 }
 
 // Update visualization
