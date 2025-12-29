@@ -1,4 +1,4 @@
-import { Activity } from './ActivityManager';
+import { Activity } from './Activity';
 import { Timeline, TimelineOptions, DataSet } from 'vis-timeline/standalone';
 
 // Timetable data structure
@@ -17,6 +17,14 @@ export class TimetableManager {
   // Get date key for map
   private getDateKey(date: Date): string {
     return date.toISOString().split('T')[0];
+  }
+
+  // Print all daily timetables (for debugging)
+  printDailyTimetables(): void {
+    console.log("=== Daily Timetables ===");
+    this.dailyTimetables.forEach((timetable, key) => {
+      console.log(`Date: ${key}, Hours Worked: ${timetable.hoursWorked}, Activities: ${timetable.activities.length}`);
+    });
   }
 
   // Set hours worked for a specific date
@@ -72,8 +80,8 @@ export class TimetableManager {
     }
   }
 
-  // Initialize timeline visualization
-  initializeTimeline(container: HTMLElement, activities: Activity[]): void {
+  // Update timeline visualization
+  updateTimelineDisplay(container: HTMLElement, activities: Activity[]): void {
     // Prepare items for timeline
     const filteredActivities = activities.filter(activity => {
       const endedAtCurrentDate = activity.end >= this.getCurrentDateStartTime() && activity.end <= this.getCurrentDateEndTime();
@@ -92,9 +100,8 @@ export class TimetableManager {
     );
 
     // Timeline options
-    console.log("initializing timetable for date:", this.currentDate);
     const options: TimelineOptions = {
-      height: '600px',
+      height: '300px',
       margin: {
         item: 10,
         axis: 5

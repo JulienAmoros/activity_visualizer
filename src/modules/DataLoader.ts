@@ -1,4 +1,4 @@
-import { Activity } from './ActivityManager';
+import { Activity } from './Activity';
 import ICAL from 'ical.js';
 
 // Base interface for all loaders

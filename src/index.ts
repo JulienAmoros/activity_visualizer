@@ -1,4 +1,3 @@
-import { ActivityManager } from './modules/ActivityManager';
 import { DataLoaderFactory } from './modules/DataLoader';
 import { TimetableManager } from './modules/TimetableManager';
 import 'vis-timeline/styles/vis-timeline-graph2d.css';
@@ -8,7 +7,6 @@ import './styles.css';
 const STATUS_DISPLAY_TIMEOUT = 5000;
 
 // Initialize managers
-const activityManager = new ActivityManager();
 const timetableManager = new TimetableManager();
 
 // Get DOM elements
@@ -37,7 +35,8 @@ function showStatus(message: string, isError: boolean = false) {
 
 // Update visualization
 function updateVisualization() {
-  const activities = activityManager.getActivities();
+  const date = dateInput.valueAsDate ?? new Date();
+  const activities = timetableManager.getTimetableForDate(date)?.activities ?? [];
 
   visualization.innerHTML = '';
   if (activities.length === 0) {
@@ -45,9 +44,7 @@ function updateVisualization() {
     return;
   }
 
-  timetableManager.clearTimetables();
-  timetableManager.addActivities(activities);
-  timetableManager.initializeTimeline(visualization, activities);
+  timetableManager.updateTimelineDisplay(visualization, activities);
 
   showStatus(`Successfully loaded ${activities.length} activities`);
 }
@@ -93,7 +90,7 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
       return;
     }
 
-    activityManager.addActivities(activities);
+    timetableManager.addActivities(activities);
     updateVisualization();
   } catch (error) {
     console.error('Error loading file:', error);
@@ -148,7 +145,6 @@ mboxFileInput.addEventListener('change', async (e) => {
 });
 
 clearBtn.addEventListener('click', () => {
-  activityManager.clearActivities();
   timetableManager.clearTimetables();
   visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
   hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No hours tracked yet.</p>';
