@@ -39,6 +39,7 @@ function showStatus(message: string, isError: boolean = false) {
 function updateVisualization() {
   const activities = activityManager.getActivities();
 
+  visualization.innerHTML = '';
   if (activities.length === 0) {
     visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
     return;
