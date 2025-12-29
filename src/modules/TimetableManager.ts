@@ -95,7 +95,7 @@ export class TimetableManager {
       orientation: 'top',
       stack: true,
       zoomMin: 1000 * 60 * 60 * 24, // 1 day
-      zoomMax: 1000 * 60 * 60 * 24 * 31 * 3, // 3 months
+      zoomMax: 1000 * 60 * 60 * 24, // 1 day
     };
 
     // Create timeline
