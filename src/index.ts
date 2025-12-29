@@ -101,6 +101,27 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
   }
 }
 
+// Update hours for the selected date
+function updateHoursForCurrentDate() {
+  const date = dateInput.valueAsDate;
+  const hours = parseFloat(hoursInput.value);
+
+  if (!date) {
+    showStatus('Please select a date', true);
+    return;
+  }
+
+  if (isNaN(hours) || hours < 0 || hours > 24) {
+    showStatus('Please enter valid hours (0-24)', true);
+    return;
+  }
+
+  timetableManager.setHoursWorked(date, hours);
+  updateHoursDisplay();
+  showStatus(`Set ${hours} hours for ${date.toLocaleDateString()}`);
+  hoursInput.value = '';
+}
+
 // Event listeners
 csvFileInput.addEventListener('change', async (e) => {
   const file = (e.target as HTMLInputElement).files?.[0];
@@ -134,25 +155,7 @@ clearBtn.addEventListener('click', () => {
   showStatus('All data cleared');
 });
 
-setHoursBtn.addEventListener('click', () => {
-  const date = dateInput.valueAsDate;
-  const hours = parseFloat(hoursInput.value);
-
-  if (!date) {
-    showStatus('Please select a date', true);
-    return;
-  }
-
-  if (isNaN(hours) || hours < 0 || hours > 24) {
-    showStatus('Please enter valid hours (0-24)', true);
-    return;
-  }
-
-  timetableManager.setHoursWorked(date, hours);
-  updateHoursDisplay();
-  showStatus(`Set ${hours} hours for ${date.toLocaleDateString()}`);
-  hoursInput.value = '';
-});
+setHoursBtn.addEventListener('click', updateHoursForCurrentDate);
 
 dateInput.addEventListener('change', (event) => {
   const date = dateInput.valueAsDate;
@@ -160,6 +163,12 @@ dateInput.addEventListener('change', (event) => {
   if (date) {
     timetableManager.setCurrentDate(date);
     updateVisualization();
+  }
+});
+
+hoursInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+      updateHoursForCurrentDate();
   }
 });
 
