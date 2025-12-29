@@ -61,7 +61,6 @@ function updateHoursDisplay() {
   hoursList.innerHTML = dates
     .map(date => {
       const hours = timetableManager.getHoursWorked(date);
-      if (hours === 0) return '';
 
       return `
         <div class="hours-item">
@@ -91,6 +90,7 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
     }
 
     timetableManager.addActivities(activities);
+    updateHoursDisplay()
     updateVisualization();
   } catch (error) {
     console.error('Error loading file:', error);
