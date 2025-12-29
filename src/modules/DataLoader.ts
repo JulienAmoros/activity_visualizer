@@ -11,20 +11,20 @@ export class CSVLoader implements DataLoader {
   async load(data: string): Promise<Activity[]> {
     const activities: Activity[] = [];
     const lines = data.split('\n');
-    
+
     // Skip header if present
-    const startIndex = lines[0]?.toLowerCase().includes('title') || 
+    const startIndex = lines[0]?.toLowerCase().includes('title') ||
                        lines[0]?.toLowerCase().includes('start') ? 1 : 0;
-    
+
     for (let i = startIndex; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
-      
+
       const parts = this.parseCSVLine(line);
       if (parts.length < 3) continue;
-      
+
       const [title, startStr, endStr, description, location] = parts;
-      
+
       activities.push({
         id: `csv-${Date.now()}-${i}`,
         title: title || 'Untitled',
@@ -35,7 +35,7 @@ export class CSVLoader implements DataLoader {
         source: 'csv'
       });
     }
-    
+
     return activities;
   }
 
@@ -43,11 +43,11 @@ export class CSVLoader implements DataLoader {
     const result: string[] = [];
     let current = '';
     let inQuotes = false;
-    
+
     for (let i = 0; i < line.length; i++) {
       const char = line[i];
       const nextChar = line[i + 1];
-      
+
       if (char === '"') {
         // Handle escaped quotes ("") within quoted fields
         if (inQuotes && nextChar === '"') {
@@ -63,7 +63,7 @@ export class CSVLoader implements DataLoader {
         current += char;
       }
     }
-    
+
     result.push(current.trim());
     return result;
   }
@@ -73,15 +73,15 @@ export class CSVLoader implements DataLoader {
 export class ICalLoader implements DataLoader {
   async load(data: string): Promise<Activity[]> {
     const activities: Activity[] = [];
-    
+
     try {
       const jcalData = ICAL.parse(data);
       const comp = new ICAL.Component(jcalData);
       const vevents = comp.getAllSubcomponents('vevent');
-      
+
       vevents.forEach((vevent: any) => {
         const event = new ICAL.Event(vevent);
-        
+
         activities.push({
           id: `ical-${event.uid || Date.now()}`,
           title: event.summary || 'Untitled Event',
@@ -95,7 +95,7 @@ export class ICalLoader implements DataLoader {
     } catch (error) {
       console.error('Error parsing iCal data:', error);
     }
-    
+
     return activities;
   }
 }
@@ -106,23 +106,23 @@ export class MBOXLoader implements DataLoader {
 
   async load(data: string): Promise<Activity[]> {
     const activities: Activity[] = [];
-    
+
     // Split mbox into individual messages
     const messages = data.split('\nFrom ');
-    
+
     for (let i = 0; i < messages.length; i++) {
       const message = messages[i];
       if (!message.trim()) continue;
-      
+
       const subjectMatch = message.match(/^Subject:\s*(.+)$/m);
       const dateMatch = message.match(/^Date:\s*(.+)$/m);
       const fromMatch = message.match(/^From:\s*(.+)$/m);
-      
+
       if (subjectMatch && dateMatch) {
         const date = new Date(dateMatch[1]);
         const endDate = new Date(date);
         endDate.setHours(date.getHours() + this.DEFAULT_EMAIL_DURATION_HOURS);
-        
+
         activities.push({
           id: `mbox-${Date.now()}-${i}`,
           title: subjectMatch[1].trim(),
@@ -134,7 +134,7 @@ export class MBOXLoader implements DataLoader {
         });
       }
     }
-    
+
     return activities;
   }
 }
