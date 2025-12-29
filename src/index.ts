@@ -154,6 +154,15 @@ setHoursBtn.addEventListener('click', () => {
   hoursInput.value = '';
 });
 
+dateInput.addEventListener('change', (event) => {
+  const date = dateInput.valueAsDate;
+
+  if (date) {
+    timetableManager.setCurrentDate(date);
+    updateVisualization();
+  }
+});
+
 // Initialize
 visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
 updateHoursDisplay();

@@ -12,6 +12,7 @@ export interface DailyTimetable {
 export class TimetableManager {
   private dailyTimetables: Map<string, DailyTimetable> = new Map();
   private timeline: Timeline | null = null;
+  private currentDate: Date = new Date();
 
   // Get date key for map
   private getDateKey(date: Date): string {
@@ -74,8 +75,13 @@ export class TimetableManager {
   // Initialize timeline visualization
   initializeTimeline(container: HTMLElement, activities: Activity[]): void {
     // Prepare items for timeline
+    const filteredActivities = activities.filter(activity => {
+      const endedAtCurrentDate = activity.end >= this.getCurrentDateStartTime() && activity.end <= this.getCurrentDateEndTime();
+      const startedAtCurrentDate = activity.start >= this.getCurrentDateStartTime() && activity.start <= this.getCurrentDateEndTime();
+      return endedAtCurrentDate || startedAtCurrentDate;
+    });
     const items = new DataSet(
-      activities.map(activity => ({
+      filteredActivities.map(activity => ({
         id: activity.id,
         content: activity.title,
         start: activity.start,
@@ -86,15 +92,18 @@ export class TimetableManager {
     );
 
     // Timeline options
+    console.log("initializing timetable for date:", this.currentDate);
     const options: TimelineOptions = {
       height: '600px',
       margin: {
         item: 10,
         axis: 5
       },
+      max: this.getCurrentDateEndTime(),
+      min: this.getCurrentDateStartTime(),
       orientation: 'top',
       stack: true,
-      zoomMin: 1000 * 60 * 60 * 24, // 1 day
+      zoomMin: 4 * 1000 * 60 * 60, // 4 hours
       zoomMax: 1000 * 60 * 60 * 24, // 1 day
     };
 
@@ -108,5 +117,29 @@ export class TimetableManager {
   // Get timeline instance
   getTimeline(): Timeline | null {
     return this.timeline;
+  }
+
+  // Get current date in timeline
+  getCurrentDate(): Date | null {
+    return this.currentDate;
+  }
+
+  // Get start time of current date
+  getCurrentDateStartTime(): Date {
+    const startOfDay = new Date(this.currentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    return startOfDay;
+  }
+
+  // Get end time of current date
+  getCurrentDateEndTime(): Date {
+    const endOfDay = new Date(this.currentDate);
+    endOfDay.setHours(23, 59, 59, 999);
+    return endOfDay;
+  }
+
+  // Set current date in timeline
+  setCurrentDate(date: Date): void {
+    this.currentDate = date;
   }
 }
