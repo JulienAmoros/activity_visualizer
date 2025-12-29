@@ -102,7 +102,7 @@ export class ICalLoader implements DataLoader {
 
 // MBOX Loader (simplified - extracts date and subject from emails)
 export class MBOXLoader implements DataLoader {
-  private readonly DEFAULT_EMAIL_DURATION_HOURS = 1;
+  private readonly DEFAULT_EMAIL_DURATION_MINUTES = 10;
 
   async load(data: string): Promise<Activity[]> {
     const activities: Activity[] = [];
@@ -120,14 +120,14 @@ export class MBOXLoader implements DataLoader {
 
       if (subjectMatch && dateMatch) {
         const date = new Date(dateMatch[1]);
-        const endDate = new Date(date);
-        endDate.setHours(date.getHours() + this.DEFAULT_EMAIL_DURATION_HOURS);
+        const startDate = new Date(date);
+        startDate.setMinutes(date.getMinutes() - this.DEFAULT_EMAIL_DURATION_MINUTES);
 
         activities.push({
           id: `mbox-${Date.now()}-${i}`,
           title: subjectMatch[1].trim(),
-          start: date,
-          end: endDate,
+          start: startDate,
+          end: date,
           description: fromMatch ? `From: ${fromMatch[1]}` : '',
           location: 'Email',
           source: 'mbox'
