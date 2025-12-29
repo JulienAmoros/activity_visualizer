@@ -1,0 +1,31 @@
+{
+  "name": "activity_visualizer",
+  "version": "1.0.0",
+  "description": "A frontend single-page application for importing and visualizing activities",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development --open",
+    "start": "webpack serve --mode development"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^6.4.1",
+    "ical.js": "^2.2.1",
+    "node-mbox": "^2.0.0",
+    "vis-timeline": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.5",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
