@@ -61,16 +61,24 @@ function updateHoursDisplay() {
   hoursList.innerHTML = dates
     .map(date => {
       const hours = timetableManager.getHoursWorked(date);
+      const dateStr = date.toISOString().split('T')[0]
 
       return `
-        <div class="hours-item">
-          <span class="date">${date.toISOString().split('T')[0]}</span>
+        <div class="hours-item" id="hours-item-${dateStr}">
+          <span class="date">${dateStr}</span>
           <span class="hours">${hours}h</span>
         </div>
       `;
     })
     .filter(html => html !== '')
     .join('');
+
+  // TODO: refacto (and what's above also) to add elements one by one and add event listeners directly
+  const datesStr = dates.map(date => date.toISOString().split('T')[0]);
+  for (const dateStr of datesStr) {
+    const element = document.getElementById(`hours-item-${dateStr}`) as HTMLElement;
+    element.addEventListener('click', handleClickOnHoursItem, { passive: true });
+  }
 
   if (hoursList.innerHTML === '') {
     hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No hours tracked yet.</p>';
@@ -96,6 +104,23 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
     console.error('Error loading file:', error);
     showStatus(`Error loading file: ${error instanceof Error ? error.message : 'Unknown error'}`, true);
   }
+}
+
+function handleClickOnHoursItem(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  let dateStr: string;
+
+  if (target.id.startsWith('hours-item-')) {
+    dateStr = target.id.replace('hours-item-', '');
+  } else {
+    const parent = target.parentElement as HTMLElement;
+    dateStr = parent.id.replace('hours-item-', '');
+  }
+
+  const date = new Date(dateStr);
+  dateInput.value = dateStr;
+  timetableManager.setCurrentDate(date);
+  updateVisualization();
 }
 
 // Update hours for the selected date
