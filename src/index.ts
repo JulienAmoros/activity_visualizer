@@ -38,6 +38,9 @@ function showStatus(message: string, isError: boolean = false) {
 
 // Update hours display
 function updateHoursDisplay() {
+  const currentDate = dateInput.valueAsDate!;
+  const currentDateWeek = timetableManager.getDateWeek(currentDate);
+  const currentDateYear = currentDate.getFullYear();
   const dates = timetableManager.getAllDates();
   const datesByWeeks = timetableManager.getAllDatesByWeek();
 
@@ -52,6 +55,8 @@ function updateHoursDisplay() {
   datesByWeeks.forEach((value, year) => {
     const yearSection = document.createElement('details');
     yearSection.classList.add('year-section');
+    yearSection.open = year === currentDateYear;
+    yearSection.id = `year-${year}`;
     const yearSummary = document.createElement('summary');
     yearSummary.textContent = `Year ${year} ( days)`;
     yearSection.appendChild(yearSummary);
@@ -60,6 +65,8 @@ function updateHoursDisplay() {
     value.forEach((dates, week) => {
       const weekSection = document.createElement('details');
       weekSection.classList.add('week-section');
+      weekSection.open = year === currentDateYear && week === currentDateWeek;
+      weekSection.id = `year-${year}-week-${week}`;
       const weekSummary = document.createElement('summary');
       const hoursList = document.createElement('div');
       hoursList.classList.add('hours-list');
