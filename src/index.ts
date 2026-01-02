@@ -36,22 +36,6 @@ function showStatus(message: string, isError: boolean = false) {
   }, STATUS_DISPLAY_TIMEOUT);
 }
 
-// Update visualization
-function updateVisualization() {
-  const date = dateInput.valueAsDate ?? new Date();
-  const activities = timetableManager.getTimetableForDate(date)?.activities ?? [];
-
-  visualization.innerHTML = '';
-  if (activities.length === 0) {
-    visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
-    return;
-  }
-
-  timetableManager.updateTimelineDisplay(visualization, activities);
-
-  showStatus(`Successfully loaded ${activities.length} activities`);
-}
-
 // Update hours display
 function updateHoursDisplay() {
   const dates = timetableManager.getAllDates();
@@ -88,9 +72,39 @@ function updateHoursDisplay() {
   }
 }
 
-function updateCurrentDate(date: Date) {
-  dateInput.valueAsDate = date;
-  currentDateLabel.innerHTML = date.toDateString();
+// Function that update the current date everywhere it's needed
+function updateCurrentDate(newDate: Date) {
+  updateDatePickerDate(newDate)
+  updateCurrentDateLabel(newDate);
+  updateTimetableCurrentDate(newDate);
+  updateVisualization(newDate);
+
+  function updateDatePickerDate(date: Date) {
+    dateInput.valueAsDate = date;
+  }
+
+  function updateCurrentDateLabel(date: Date) {
+    currentDateLabel.innerHTML = date.toDateString();
+  }
+
+  function updateTimetableCurrentDate(date: Date) {
+    timetableManager.setCurrentDate(date);
+  }
+}
+
+// Update visualization
+function updateVisualization(date: Date = new Date()) {
+  const activities = timetableManager.getTimetableForDate(date)?.activities ?? [];
+
+  visualization.innerHTML = '';
+  if (activities.length === 0) {
+    visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
+    return;
+  }
+
+  timetableManager.updateTimelineDisplay(visualization, activities);
+
+  showStatus(`Successfully loaded ${activities.length} activities`);
 }
 
 // Handle file upload
@@ -127,9 +141,6 @@ function handleClickOnHoursItem(event: MouseEvent) {
 
   const date = new Date(dateStr);
   updateCurrentDate(date);
-
-  timetableManager.setCurrentDate(date);
-  updateVisualization();
 }
 
 // Update hours for the selected date
@@ -192,8 +203,6 @@ dateInput.addEventListener('change', (event) => {
 
   if (date) {
     updateCurrentDate(date);
-    timetableManager.setCurrentDate(date);
-    updateVisualization();
   }
 });
 
@@ -205,18 +214,20 @@ hoursInput.addEventListener('keydown', (event) => {
 
 dayBeforeBtn.addEventListener('click', () => {
   const currentDate = dateInput.valueAsDate ?? new Date();
-  currentDate.setDate(currentDate.getDate() - 1);
-  updateCurrentDate(currentDate);
-  timetableManager.setCurrentDate(currentDate);
-  updateVisualization();
+  const newDate = new Date(currentDate);
+
+  newDate.setDate(currentDate.getDate() - 1);
+
+  updateCurrentDate(newDate);
 });
 
 dayAfterBtn.addEventListener('click', () => {
   const currentDate = dateInput.valueAsDate ?? new Date();
-  currentDate.setDate(currentDate.getDate() + 1);
-  updateCurrentDate(currentDate);
-  timetableManager.setCurrentDate(currentDate);
-  updateVisualization();
+  const newDate = new Date(currentDate);
+
+  newDate.setDate(currentDate.getDate() + 1);
+
+  updateCurrentDate(newDate);
 });
 
 // Initialize
