@@ -49,11 +49,12 @@ function updateHoursDisplay() {
     .map(date => {
       const hours = timetableManager.getHoursWorked(date);
       const dateStr = date.toISOString().split('T')[0]
+      const hoursClass = hours > 0 ? 'has-hours' : 'no-hours';
 
       return `
         <div class="hours-item" id="hours-item-${dateStr}">
           <span class="date">${dateStr}</span>
-          <span class="hours">${hours}h</span>
+          <span class="hours ${hoursClass}">${hours}h</span>
         </div>
       `;
     })

@@ -251,9 +251,15 @@ body {
                             }
 
                             .hours {
-                                color: #667eea;
                                 font-weight: bold;
                                 font-size: 1.1em;
+                            }
+
+                            .has-hours {
+                                color: #667eea;
+                            }
+                            .no-hours {
+                                color: #dc3545;
                             }
                         }
                     }
