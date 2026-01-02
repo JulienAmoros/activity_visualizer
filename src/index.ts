@@ -41,7 +41,7 @@ function updateHoursDisplay() {
   const dates = timetableManager.getAllDates();
 
   if (dates.length === 0) {
-    hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No dates with tracked hours yet.</p>';
+    discardHoursList();
     return;
   }
 
@@ -68,8 +68,8 @@ function updateHoursDisplay() {
     element.addEventListener('click', handleClickOnHoursItem, { passive: true });
   }
 
-  if (hoursList.innerHTML === '') {
-    hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No hours tracked yet.</p>';
+  function discardHoursList() {
+      hoursList.innerHTML = '<p class="empty-list">No hours tracked yet.</p>';
   }
 }
 
@@ -99,13 +99,17 @@ function updateVisualization(date: Date = new Date()) {
 
   visualization.innerHTML = '';
   if (activities.length === 0) {
-    visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
+    discardVisualizationContent();
     return;
   }
 
   timetableManager.updateTimelineDisplay(visualization, activities);
 
   showStatus(`Successfully loaded ${activities.length} activities`);
+
+  function discardVisualizationContent() {
+    visualization.innerHTML = '<p class="empty-viz">No activities to display. Import some data to get started!</p>';
+  }
 }
 
 // Handle file upload
@@ -192,8 +196,8 @@ mboxFileInput.addEventListener('change', async (e) => {
 
 clearBtn.addEventListener('click', () => {
   timetableManager.clearTimetables();
-  visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
-  hoursList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No hours tracked yet.</p>';
+  updateVisualization();
+  updateHoursDisplay();
   showStatus('All data cleared');
 });
 
@@ -232,7 +236,7 @@ dayAfterBtn.addEventListener('click', () => {
 });
 
 // Initialize
-visualization.innerHTML = '<p style="padding: 40px; text-align: center; color: #999;">No activities to display. Import some data to get started!</p>';
+updateVisualization();
 updateHoursDisplay();
 
 console.log('Activity Visualizer initialized');

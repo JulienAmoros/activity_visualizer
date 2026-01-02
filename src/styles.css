@@ -203,6 +203,12 @@ body {
                     overflow: hidden;
                     background: white;
 
+                    .empty-viz {
+                        padding: 40px;
+                        text-align: center;
+                        color: #999;
+                    }
+
                     .activity-csv { background-color: #e3f2fd; }
                     .activity-ical { background-color: #f3e5f5; }
                     .activity-mbox { background-color: #e8f5e9; }
@@ -229,6 +235,12 @@ body {
                     h3 {
                         color: #764ba2;
                         margin-bottom: 15px;
+                    }
+
+                    .empty-list {
+                        grid-column: 1/-1;
+                        text-align: center;
+                        color: #999;
                     }
 
                     .hours-list {
