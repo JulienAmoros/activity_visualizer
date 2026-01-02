@@ -162,6 +162,19 @@ input[type="file"] {
     border-color: #667eea;
 }
 
+.currentDate {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 8px;
+
+    .label {
+        margin-right: 8px;
+        font-weight: 600;
+        font-size: 1.1em;
+        color: #333;
+    }
+}
+
 .set-hours-btn {
     padding: 10px 20px;
     background: #28a745;

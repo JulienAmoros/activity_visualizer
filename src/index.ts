@@ -14,6 +14,7 @@ const csvFileInput = document.getElementById('csvFile') as HTMLInputElement;
 const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
+const currentDateLabel = document.getElementById('currentDate') as HTMLElement;
 const visualization = document.getElementById('visualization') as HTMLElement;
 const statusDiv = document.getElementById('status') as HTMLElement;
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -22,7 +23,7 @@ const setHoursBtn = document.getElementById('setHoursBtn') as HTMLButtonElement;
 const hoursList = document.getElementById('hoursList') as HTMLElement;
 
 // Set default date to today
-dateInput.valueAsDate = new Date();
+updateCurrentDate(new Date());
 
 // Show status message
 function showStatus(message: string, isError: boolean = false) {
@@ -85,6 +86,11 @@ function updateHoursDisplay() {
   }
 }
 
+function updateCurrentDate(date: Date) {
+  dateInput.valueAsDate = date;
+  currentDateLabel.innerHTML = date.toDateString();
+}
+
 // Handle file upload
 async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
   try {
@@ -118,7 +124,8 @@ function handleClickOnHoursItem(event: MouseEvent) {
   }
 
   const date = new Date(dateStr);
-  dateInput.value = dateStr;
+  updateCurrentDate(date);
+
   timetableManager.setCurrentDate(date);
   updateVisualization();
 }
@@ -182,6 +189,7 @@ dateInput.addEventListener('change', (event) => {
   const date = dateInput.valueAsDate;
 
   if (date) {
+    updateCurrentDate(date);
     timetableManager.setCurrentDate(date);
     updateVisualization();
   }
