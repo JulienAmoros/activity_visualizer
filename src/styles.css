@@ -153,10 +153,11 @@ body {
                     }
 
                     .date-label {
-                        margin-right: 8px;
+                        text-align: center;
                         font-weight: 600;
                         font-size: 1.1em;
                         color: #333;
+                        width: 180px;
                     }
 
                     input[type="date"],
