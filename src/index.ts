@@ -22,7 +22,7 @@ const statusDiv = document.getElementById('status') as HTMLElement;
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
 const hoursInput = document.getElementById('hoursInput') as HTMLInputElement;
 const setHoursBtn = document.getElementById('setHoursBtn') as HTMLButtonElement;
-const hoursList = document.getElementById('hoursList') as HTMLElement;
+const yearsList = document.getElementById('yearsList') as HTMLElement;
 
 // Set default date to today
 updateCurrentDate(new Date());
@@ -39,37 +39,71 @@ function showStatus(message: string, isError: boolean = false) {
 // Update hours display
 function updateHoursDisplay() {
   const dates = timetableManager.getAllDates();
+  const datesByWeeks = timetableManager.getAllDatesByWeek();
 
   if (dates.length === 0) {
     discardHoursList();
     return;
+  } else {
+    yearsList.innerHTML = '';
   }
 
-  hoursList.innerHTML = dates
-    .map(date => {
-      const hours = timetableManager.getHoursWorked(date);
-      const dateStr = date.toISOString().split('T')[0]
-      const hoursClass = hours > 0 ? 'has-hours' : 'no-hours';
+  // Create a section for each years
+  datesByWeeks.forEach((value, year) => {
+    const yearSection = document.createElement('details');
+    yearSection.classList.add('year-section');
+    const yearSummary = document.createElement('summary');
+    yearSummary.textContent = `Year ${year} ( days)`;
+    yearSection.appendChild(yearSummary);
 
-      return `
-        <div class="hours-item" id="hours-item-${dateStr}">
-          <span class="date">${dateStr}</span>
-          <span class="hours ${hoursClass}">${hours}h</span>
-        </div>
-      `;
-    })
-    .filter(html => html !== '')
-    .join('');
+    // Create a section for each week in year where there's a know date
+    value.forEach((dates, week) => {
+      const weekSection = document.createElement('details');
+      weekSection.classList.add('week-section');
+      const weekSummary = document.createElement('summary');
+      const hoursList = document.createElement('div');
+      hoursList.classList.add('hours-list');
+      const weekNumber = timetableManager.getDateWeek(dates[0]);
+      const firstWeekDateStr = formatDate(timetableManager.getWeekStartDate(year, week));
+      const lastWeekDateStr = formatDate(timetableManager.getWeekEndDate(year, week));
+      weekSummary.textContent = `Week ${weekNumber} (${firstWeekDateStr} - ${lastWeekDateStr})`;
 
-  // TODO: refacto (and what's above also) to add elements one by one and add event listeners directly
-  const datesStr = dates.map(date => date.toISOString().split('T')[0]);
-  for (const dateStr of datesStr) {
-    const element = document.getElementById(`hours-item-${dateStr}`) as HTMLElement;
-    element.addEventListener('click', handleClickOnHoursItem, { passive: true });
-  }
+      // Create date card for each date in week
+      dates.forEach(date => {
+        const hours = timetableManager.getHoursWorked(date);
+        const hourItem = document.createElement('div');
+        hourItem.classList.add('hours-item');
+        hourItem.id = `hours-item-${formatDate(date)}`;
+        const dateLabel = document.createElement('span');
+        dateLabel.classList.add('date');
+        dateLabel.textContent = formatDate(date);
+        const hourLabel = document.createElement('span');
+        const hoursClass = hours > 0 ? 'has-hours' : 'no-hours';
+        hourLabel.classList.add('hours');
+        hourLabel.classList.add(hoursClass);
+        hourLabel.textContent = `${hours}h`;
+
+        hourItem.appendChild(dateLabel);
+        hourItem.appendChild(hourLabel);
+        hoursList.appendChild(hourItem);
+
+        hourItem.addEventListener('click', handleClickOnHoursItem, { passive: true });
+      });
+
+      weekSection.appendChild(weekSummary);
+      weekSection.appendChild(hoursList);
+      yearSection.appendChild(weekSection);
+    });
+
+    yearsList.appendChild(yearSection);
+  });
 
   function discardHoursList() {
-      hoursList.innerHTML = '<p class="empty-list">No hours tracked yet.</p>';
+      yearsList.innerHTML = '<p class="empty-list">No hours tracked yet.</p>';
+  }
+
+  function formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 }
 

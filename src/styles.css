@@ -238,43 +238,69 @@ body {
                         margin-bottom: 15px;
                     }
 
+                    .year-section {
+                        margin-bottom: 25px;
+
+                        summary {
+                            font-size: 1.3em;
+                            font-weight: 600;
+                            color: #555;
+                            cursor: pointer;
+                            padding: 10px 0;
+                            border-bottom: 2px solid #ddd;
+                        }
+
+                        .week-section {
+                            margin-bottom: 20px;
+
+                            summary {
+                                font-size: 1.1em;
+                                font-weight: 500;
+                                color: #666;
+                                cursor: pointer;
+                                padding: 8px 0;
+                                border-bottom: 1px solid #eee;
+                            }
+
+                            .hours-list {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                                gap: 15px;
+
+                                .hours-item {
+                                    background: white;
+                                    padding: 15px;
+                                    border-radius: 6px;
+                                    border: 1px solid #ddd;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+
+                                    .date {
+                                        font-weight: 500;
+                                        color: #333;
+                                    }
+
+                                    .hours {
+                                        font-weight: bold;
+                                        font-size: 1.1em;
+                                    }
+
+                                    .has-hours {
+                                        color: #667eea;
+                                    }
+                                    .no-hours {
+                                        color: #dc3545;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     .empty-list {
                         grid-column: 1/-1;
                         text-align: center;
                         color: #999;
-                    }
-
-                    .hours-list {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                        gap: 15px;
-
-                        .hours-item {
-                            background: white;
-                            padding: 15px;
-                            border-radius: 6px;
-                            border: 1px solid #ddd;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-
-                            .date {
-                                font-weight: 500;
-                                color: #333;
-                            }
-
-                            .hours {
-                                font-weight: bold;
-                                font-size: 1.1em;
-                            }
-
-                            .has-hours {
-                                color: #667eea;
-                            }
-                            .no-hours {
-                                color: #dc3545;
-                            }
-                        }
                     }
                 }
             }

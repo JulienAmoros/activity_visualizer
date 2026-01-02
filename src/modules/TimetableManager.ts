@@ -71,6 +71,58 @@ export class TimetableManager {
       .sort((a, b) => a.getTime() - b.getTime());
   }
 
+  // Get all dates with timetables grouped by week
+  getAllDatesByWeek(): Map<number, Map<number, Date[]>> {
+    const dates = this.getAllDates();
+    const weeksByYears: Map<number, Map<number, Date[]>> = new Map();
+
+    dates.forEach(date => {
+      const year = date.getFullYear();
+      const week = this.getDateWeek(date);
+
+      if (! weeksByYears.has(year)) {
+        weeksByYears.set(year, new Map());
+      }
+
+      const datesByWeek = weeksByYears.get(year)!;
+
+      if (! datesByWeek.has(week)) {
+        datesByWeek.set(week, []);
+      }
+
+      datesByWeek.get(week)!.push(date);
+    });
+
+    return weeksByYears;
+  }
+
+  getDateWeek(date: Date) {
+    const firstDay = new Date(date.getFullYear(), 0, 1);
+    const days = Math.floor((date.getTime() - firstDay.getTime()) / (24 * 60 * 60 * 1000));
+
+    return Math.ceil((days + firstDay.getDay() + 1) / 7);
+  }
+
+  getWeekStartDate(year: number, week: number): Date {
+    const firstDayOfYear = new Date(year, 0, 1, 12);
+    const daysOffset = (week - 1) * 7;
+    const weekStartDate = new Date(firstDayOfYear.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+
+    // Adjust to the first day of the week (assuming week starts on Sunday)
+    const dayOfWeek = weekStartDate.getDay();
+    weekStartDate.setDate(weekStartDate.getDate() - dayOfWeek);
+
+    return weekStartDate;
+  }
+
+  getWeekEndDate(year: number, week: number): Date {
+    const weekStartDate = this.getWeekStartDate(year, week);
+    const weekEndDate = new Date(weekStartDate);
+    weekEndDate.setDate(weekEndDate.getDate() + 6);
+
+    return weekEndDate;
+  }
+
   // Clear all timetables
   clearTimetables(): void {
     this.dailyTimetables.clear();
