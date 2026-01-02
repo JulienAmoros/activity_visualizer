@@ -14,7 +14,9 @@ const csvFileInput = document.getElementById('csvFile') as HTMLInputElement;
 const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
+const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
 const currentDateLabel = document.getElementById('currentDate') as HTMLElement;
+const dayAfterBtn = document.getElementById('dayAfter') as HTMLButtonElement;
 const visualization = document.getElementById('visualization') as HTMLElement;
 const statusDiv = document.getElementById('status') as HTMLElement;
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -199,6 +201,22 @@ hoursInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
       updateHoursForCurrentDate();
   }
+});
+
+dayBeforeBtn.addEventListener('click', () => {
+  const currentDate = dateInput.valueAsDate ?? new Date();
+  currentDate.setDate(currentDate.getDate() - 1);
+  updateCurrentDate(currentDate);
+  timetableManager.setCurrentDate(currentDate);
+  updateVisualization();
+});
+
+dayAfterBtn.addEventListener('click', () => {
+  const currentDate = dateInput.valueAsDate ?? new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+  updateCurrentDate(currentDate);
+  timetableManager.setCurrentDate(currentDate);
+  updateVisualization();
 });
 
 // Initialize

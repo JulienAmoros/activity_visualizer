@@ -167,6 +167,16 @@ input[type="file"] {
     align-items: baseline;
     margin-bottom: 8px;
 
+    .button {
+        margin-right: 8px;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
     .label {
         margin-right: 8px;
         font-weight: 600;
