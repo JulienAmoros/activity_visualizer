@@ -35,19 +35,17 @@
             </div>
 
             <div class="timeline-section">
+
+                <h2>Activity Timeline</h2>
                 <div class="date-selector">
+                    <button id="dayBefore" class="button"><</button>
+                    <p id="currentDate" class="date-label"></p>
+                    <button id="dayAfter" class="button">></button>
                     <label for="dateInput">Select Date:</label>
                     <input type="date" id="dateInput">
                     <label for="hoursInput">Hours Worked:</label>
                     <input type="number" id="hoursInput" min="0" max="24" step="0.5" placeholder="0">
                     <button id="setHoursBtn" class="set-hours-btn">Set Hours</button>
-                </div>
-
-                <h2>Activity Timeline</h2>
-                <div class="currentDate">
-                    <button id="dayBefore" class="button"><</button>
-                    <p id="currentDate" class="label"></p>
-                    <button id="dayAfter" class="button">></button>
                 </div>
                 <div id="visualization"></div>
             </div>

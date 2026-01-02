@@ -148,6 +148,23 @@ input[type="file"] {
     color: #555;
 }
 
+.date-selector .button {
+    margin-right: 8px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.date-selector .date-label {
+    margin-right: 8px;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #333;
+}
+
 .date-selector input[type="date"],
 .date-selector input[type="number"] {
     padding: 10px;
@@ -160,29 +177,6 @@ input[type="file"] {
 .date-selector input:focus {
     outline: none;
     border-color: #667eea;
-}
-
-.currentDate {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 8px;
-
-    .button {
-        margin-right: 8px;
-        padding: 10px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 1em;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .label {
-        margin-right: 8px;
-        font-weight: 600;
-        font-size: 1.1em;
-        color: #333;
-    }
 }
 
 .set-hours-btn {
