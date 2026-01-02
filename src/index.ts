@@ -36,7 +36,28 @@ function showStatus(message: string, isError: boolean = false) {
   }, STATUS_DISPLAY_TIMEOUT);
 }
 
-// Update hours display
+// Update hours for a specific date
+function updateHoursForDate(date: Date, hours: number) {
+  const dateYear = date.getFullYear();
+  const dateWeek = timetableManager.getDateWeek(date);
+  const hourItem = document.getElementById(`hours-item-${date.toISOString().split('T')[0]}`);
+
+  timetableManager.setHoursWorked(date, hours);
+
+  if (hourItem) {
+    const weekSection = document.getElementById(`year-${dateYear}-week-${dateWeek}`)! as HTMLDetailsElement;
+    weekSection.open = true;
+
+    const hourLabel = hourItem.querySelector('.hours') as HTMLElement;
+    const hoursClass = hours > 0 ? 'has-hours' : 'no-hours';
+    hourLabel.className = `hours ${hoursClass}`;
+    hourLabel.textContent = `${hours}h`;
+  } else {
+    refreshHoursDisplay();
+  }
+}
+
+// Hard refresh hours display
 function refreshHoursDisplay() {
   const currentDate = dateInput.valueAsDate!;
   const currentDateWeek = timetableManager.getDateWeek(currentDate);
@@ -204,8 +225,7 @@ function updateHoursForCurrentDate() {
     return;
   }
 
-  timetableManager.setHoursWorked(date, hours);
-  refreshHoursDisplay();
+  updateHoursForDate(date, hours);
   showStatus(`Set ${hours} hours for ${date.toISOString().split('T')[0]}`);
   hoursInput.value = '';
 }
