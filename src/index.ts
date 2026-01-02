@@ -37,7 +37,7 @@ function showStatus(message: string, isError: boolean = false) {
 }
 
 // Update hours display
-function updateHoursDisplay() {
+function refreshHoursDisplay() {
   const currentDate = dateInput.valueAsDate!;
   const currentDateWeek = timetableManager.getDateWeek(currentDate);
   const currentDateYear = currentDate.getFullYear();
@@ -166,7 +166,7 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
     }
 
     timetableManager.addActivities(activities);
-    updateHoursDisplay()
+    refreshHoursDisplay()
     updateVisualization();
   } catch (error) {
     console.error('Error loading file:', error);
@@ -205,7 +205,7 @@ function updateHoursForCurrentDate() {
   }
 
   timetableManager.setHoursWorked(date, hours);
-  updateHoursDisplay();
+  refreshHoursDisplay();
   showStatus(`Set ${hours} hours for ${date.toISOString().split('T')[0]}`);
   hoursInput.value = '';
 }
@@ -238,7 +238,7 @@ mboxFileInput.addEventListener('change', async (e) => {
 clearBtn.addEventListener('click', () => {
   timetableManager.clearTimetables();
   updateVisualization();
-  updateHoursDisplay();
+  refreshHoursDisplay();
   showStatus('All data cleared');
 });
 
@@ -278,6 +278,6 @@ dayAfterBtn.addEventListener('click', () => {
 
 // Initialize
 updateVisualization();
-updateHoursDisplay();
+refreshHoursDisplay();
 
 console.log('Activity Visualizer initialized');
