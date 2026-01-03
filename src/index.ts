@@ -5,6 +5,7 @@ import './styles.css';
 
 // Constants
 const STATUS_DISPLAY_TIMEOUT = 5000;
+const DEFAULT_HOURS_PER_DAY = 7.7;
 
 // Initialize managers
 const timetableManager = new TimetableManager();
@@ -22,6 +23,7 @@ const statusDiv = document.getElementById('status') as HTMLElement;
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
 const hoursInput = document.getElementById('hoursInput') as HTMLInputElement;
 const setHoursBtn = document.getElementById('setHoursBtn') as HTMLButtonElement;
+const setDayOffBtn = document.getElementById('setDayOffBtn') as HTMLButtonElement;
 const yearsList = document.getElementById('yearsList') as HTMLElement;
 
 // Set default date to today
@@ -269,6 +271,12 @@ clearBtn.addEventListener('click', () => {
 });
 
 setHoursBtn.addEventListener('click', updateHoursForCurrentDate);
+
+setDayOffBtn.addEventListener('click', () => {
+  hoursInput.value = DEFAULT_HOURS_PER_DAY.toString();
+
+  updateHoursForCurrentDate();
+});
 
 dateInput.addEventListener('change', (event) => {
   const date = dateInput.valueAsDate;
