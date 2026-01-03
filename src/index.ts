@@ -40,7 +40,7 @@ function showStatus(message: string, isError: boolean = false) {
 function updateHoursForDate(date: Date, hours: number) {
   const dateYear = date.getFullYear();
   const dateWeek = timetableManager.getDateWeek(date);
-  const hourItem = document.getElementById(`hours-item-${date.toISOString().split('T')[0]}`);
+  const hourItem = document.getElementById(`hours-item-${formatDate(date)}`);
 
   timetableManager.setHoursWorked(date, hours);
 
@@ -228,7 +228,7 @@ function updateHoursForCurrentDate() {
   }
 
   updateHoursForDate(date, hours);
-  showStatus(`Set ${hours} hours for ${date.toISOString().split('T')[0]}`);
+  showStatus(`Set ${hours} hours for ${formatDate(date)}`);
   hoursInput.value = '';
 }
 
