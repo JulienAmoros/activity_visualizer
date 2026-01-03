@@ -12,11 +12,16 @@ const timetableManager = new TimetableManager();
 
 // Get DOM elements
 const csvFileInput = document.getElementById('csvFile') as HTMLInputElement;
+const trelloImportBtn = document.getElementById('trelloImportBtn') as HTMLButtonElement;
 const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
 const mboxFileLabel = document.getElementById('mboxFileLabel') as HTMLLabelElement;
 const jsonFileInput = document.getElementById('jsonFile') as HTMLInputElement;
 const mboxImportDetails = document.getElementById('mboxImportOptions') as HTMLDetailsElement;
+const trelloImportDetails = document.getElementById('trelloImportOptions') as HTMLDetailsElement;
+const trelloApiKeyInput = document.getElementById('trelloApiKey') as HTMLInputElement;
+const trelloAuthTokenInput = document.getElementById('trelloAuthToken') as HTMLInputElement;
+const trelloUsernameInput = document.getElementById('trelloUsername') as HTMLInputElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
 const emailInput = document.getElementById('emailInput') as HTMLInputElement;
 const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
@@ -35,6 +40,7 @@ const yearsList = document.getElementById('yearsList') as HTMLElement;
 updateCurrentDate(new Date());
 mboxFileInput.disabled = true;
 mboxFileLabel.className = 'file-label disabled';
+trelloImportBtn.className = 'import-btn disabled';
 
 // Show status message
 function showStatus(message: string, isError: boolean = false) {
@@ -218,6 +224,20 @@ function handleClickOnHoursItem(event: MouseEvent) {
   updateCurrentDate(date);
 }
 
+function handleTrelloCredentialsChange() {
+  const apiKey = trelloApiKeyInput.value.trim();
+  const authToken = trelloAuthTokenInput.value.trim();
+  const username = trelloUsernameInput.value.trim();
+
+  const credentialsProvided = apiKey !== '' && authToken !== '' && username !== '';
+
+  if (credentialsProvided) {
+    trelloImportBtn.className = 'import-btn';
+  } else {
+    trelloImportBtn.className = 'import-btn disabled';
+  }
+}
+
 // Update hours for the selected date
 function updateHoursForCurrentDate() {
   const date = dateInput.valueAsDate;
@@ -251,6 +271,17 @@ csvFileInput.addEventListener('change', async (e) => {
   }
 });
 
+trelloImportBtn.addEventListener('click', async () => {
+  if (trelloApiKeyInput.value.trim() === '' ||
+      trelloAuthTokenInput.value.trim() === '' ||
+      trelloUsernameInput.value.trim() === '') {
+    showStatus('Please enter your Trello API Key, Auth Token, and Username', true);
+    trelloImportDetails.open = true;
+  } else {
+    console.log("TODO: import trello activity from API");
+  }
+});
+
 icalFileInput.addEventListener('change', async (e) => {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (file) {
@@ -281,6 +312,10 @@ emailInput.addEventListener('change', (e) => {
     emailInput.value = emailInput.value.trim();
   }
 });
+
+trelloApiKeyInput.addEventListener('change', handleTrelloCredentialsChange);
+trelloAuthTokenInput.addEventListener('change', handleTrelloCredentialsChange);
+trelloUsernameInput.addEventListener('change', handleTrelloCredentialsChange);
 
 jsonFileInput.addEventListener('change', async (e) => {
   const file = (e.target as HTMLInputElement).files?.[0];

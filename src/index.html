@@ -22,6 +22,7 @@
                         <input type="file" id="csvFile" accept=".csv">
                         <label for="csvFile" class="file-label">📊 Import CSV</label>
                     </div>
+                    <button id="trelloImportBtn" class="import-btn">🔗 Trello import</button>
                     <div class="file-input-wrapper">
                         <input type="file" id="icalFile" accept=".ics,.ical">
                         <label for="icalFile" class="file-label">📆 Import iCal</label>
@@ -41,6 +42,17 @@
                     <summary>MBOX import options</summary>
                     <input type="text" id="emailInput" placeholder="john.doe@company.com" class="email-input">
                     <label for="emailInput" class="file-label" id="emailInputLabel">Enter email for MBOX filtering</label>
+                </details>
+
+                <details class="collapsable-section" id="trelloImportOptions">
+                    <summary>Trello credentials</summary>
+
+                    <label for="trelloApiKey" class="trello-creds-label" id="trelloApiKeyLabel">Enter your Trello API Key</label>
+                    <input type="text" id="trelloApiKey" placeholder="Your Trello API Key" class="trello-api-key-input">
+                    <label for="trelloAuthToken" class="trello-creds-label" id="trelloAuthTokenLabel">Enter your Trello Authentication Token</label>
+                    <input type="text" id="trelloAuthToken" placeholder="Your Trello Authentication Token" class="trello-api-key-input">
+                    <label for="trelloUsername" class="trello-creds-label" id="trelloUsernameLabel">Enter your Trello Username</label>
+                    <input type="text" id="trelloUsername" placeholder="Your Trello Username" class="trello-api-key-input">
                 </details>
             </div>
 
