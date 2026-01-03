@@ -100,7 +100,7 @@ function refreshHoursDisplay() {
     yearSection.open = yearNumber === currentDateYear;
     yearSection.id = `year-${yearNumber}`;
     const yearSummary = document.createElement('summary');
-    yearSummary.textContent = `Year ${yearNumber} ( days)`;
+    yearSummary.textContent = `Year ${yearNumber}`;
     yearSection.appendChild(yearSummary);
 
     // Create a section for each week in year where there's a know date
