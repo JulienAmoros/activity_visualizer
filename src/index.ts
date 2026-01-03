@@ -83,7 +83,10 @@ function refreshHoursDisplay() {
   yearsList.innerHTML = '';
 
   // Create a section for each years
-  timetables.years.forEach(({ weeks }, yearNumber) => {
+  const yearsMap = timetables.years;
+  Array.from(yearsMap.entries())
+    .sort((e1, e2) => e2[0] - e1[0])
+    .forEach(([yearNumber, { weeks }]) => {
     const yearSection = document.createElement('details');
     yearSection.classList.add('year-section');
     yearSection.open = yearNumber === currentDateYear;
@@ -93,7 +96,9 @@ function refreshHoursDisplay() {
     yearSection.appendChild(yearSummary);
 
     // Create a section for each week in year where there's a know date
-    weeks.forEach((weeklyTimetables, weekNumber) => {
+    Array.from(weeks.entries())
+      .sort((e1, e2) => e2[0] - e1[0])
+      .forEach(([weekNumber, weeklyTimetables]) => {
       const weekSection = document.createElement('details');
       weekSection.classList.add('week-section');
       weekSection.open = yearNumber === currentDateYear && weekNumber === currentDateWeek;
