@@ -14,6 +14,7 @@ const timetableManager = new TimetableManager();
 const csvFileInput = document.getElementById('csvFile') as HTMLInputElement;
 const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
+const jsonFileInput = document.getElementById('jsonFile') as HTMLInputElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
 const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
 const currentDateLabel = document.getElementById('currentDate') as HTMLElement;
@@ -73,14 +74,7 @@ function refreshHoursDisplay() {
   // const dates = timetableManager.getAllDates();
   // const datesByWeeks = timetableManager.getAllDatesByWeek();
   const timetables = timetableManager.getAllTimetables();
-  let hasOneElement = false;
 
-  // if (dates.length === 0) {
-  //   discardHoursList();
-  //   return;
-  // } else {
-  //   yearsList.innerHTML = '';
-  // }
   yearsList.innerHTML = '';
 
   // Create a section for each years
@@ -127,8 +121,6 @@ function refreshHoursDisplay() {
         hoursList.appendChild(hourItem);
 
         hourItem.addEventListener('click', handleClickOnHoursItem, { passive: true });
-
-        hasOneElement = true;
       });
 
       weekSection.appendChild(weekSummary);
@@ -261,6 +253,26 @@ mboxFileInput.addEventListener('change', async (e) => {
   if (file) {
     await handleFileUpload(file, 'mbox');
     mboxFileInput.value = ''; // Reset input
+  }
+});
+
+jsonFileInput.addEventListener('change', async (e) => {
+  const file = (e.target as HTMLInputElement).files?.[0];
+
+  if (file) {
+    timetableManager.clearTimetables();
+
+    try {
+      const text = await file.text();
+      timetableManager.importTimetables(text);
+      refreshHoursDisplay();
+      updateVisualization();
+      showStatus('Successfully imported timetables from JSON');
+    } catch (error) {
+      console.error('Error importing JSON file:', error);
+      showStatus(`Error importing JSON file: ${error instanceof Error ? error.message : 'Unknown error'}`, true);
+    }
+    jsonFileInput.value = ''; // Reset input
   }
 });
 

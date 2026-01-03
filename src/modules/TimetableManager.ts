@@ -233,6 +233,28 @@ export class TimetableManager {
     }
   }
 
+  // Import timetables from JSON
+  importTimetables(json: string): void {
+    this.timetables = JSON.parse(json, reviver);
+
+    function reviver(key: any, value: any) {
+      if(typeof value === 'object' && value !== null) {
+        if (value.dataType === 'Map') {
+          return new Map(value.value);
+        }
+      }
+      if (isSerializedDate(value)) {
+        return new Date(value);
+      }
+      return value;
+    }
+
+    function isSerializedDate(value: any) {
+      var datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+      return typeof value === 'string' && datePattern.test(value);
+    }
+  }
+
   //
   //  GETTERS / SETTERS
   //

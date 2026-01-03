@@ -104,6 +104,27 @@ body {
                         }
                     }
 
+                    .file-import-wrapper {
+                        position: relative;
+
+                        .file-label {
+                            display: inline-block;
+                            padding: 12px 24px;
+                            background: #17a2b8;
+                            color: white;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            font-weight: 500;
+                        }
+
+                        .file-label:hover {
+                            background: #17a2b8;
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+                        }
+                    }
+
                     .clear-btn {
                         padding: 12px 24px;
                         background: #dc3545;
