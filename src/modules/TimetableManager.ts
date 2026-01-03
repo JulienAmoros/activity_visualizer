@@ -178,27 +178,27 @@ export class TimetableManager {
     return this.timeline;
   }
 
+  // Set current date in timeline
+  setCurrentDate(date: Date): void {
+    this.currentDate = date;
+  }
+
   // Get current date in timeline
-  getCurrentDate(): Date | null {
-    return this.currentDate;
+  getCurrentDate(): Date {
+    return new Date(this.currentDate);
   }
 
   // Get start time of current date
   getCurrentDateStartTime(): Date {
-    const startOfDay = new Date(this.currentDate);
+    const startOfDay = this.getCurrentDate();
     startOfDay.setHours(0, 0, 0, 0);
     return startOfDay;
   }
 
   // Get end time of current date
   getCurrentDateEndTime(): Date {
-    const endOfDay = new Date(this.currentDate);
+    const endOfDay = this.getCurrentDate();
     endOfDay.setHours(23, 59, 59, 999);
     return endOfDay;
-  }
-
-  // Set current date in timeline
-  setCurrentDate(date: Date): void {
-    this.currentDate = date;
   }
 }
