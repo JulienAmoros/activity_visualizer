@@ -47,6 +47,11 @@ function updateHoursForDate(date: Date, hours: number) {
   if (hourItem) {
     const weekSection = document.getElementById(`year-${dateYear}-week-${dateWeek}`)! as HTMLDetailsElement;
     weekSection.open = true;
+    const timetableWeek = timetableManager.getWeek(date)!;
+    const firstWeekDateStr = formatDate(timetableManager.getWeekStartDate(dateYear, dateWeek));
+    const lastWeekDateStr = formatDate(timetableManager.getWeekEndDate(dateYear, dateWeek));
+    const weekSummary = weekSection.querySelector('summary') as HTMLElement;
+    weekSummary.textContent = `Week ${dateWeek} (${firstWeekDateStr} - ${lastWeekDateStr}) => ${timetableWeek.weeklyHoursWorked} hours worked`;
 
     const hourLabel = hourItem.querySelector('.hours') as HTMLElement;
     const hoursClass = hours > 0 ? 'has-hours' : 'no-hours';
@@ -62,42 +67,45 @@ function refreshHoursDisplay() {
   const currentDate = dateInput.valueAsDate!;
   const currentDateWeek = timetableManager.getDateWeek(currentDate);
   const currentDateYear = currentDate.getFullYear();
-  const dates = timetableManager.getAllDates();
-  const datesByWeeks = timetableManager.getAllDatesByWeek();
+  // const dates = timetableManager.getAllDates();
+  // const datesByWeeks = timetableManager.getAllDatesByWeek();
+  const timetables = timetableManager.getAllTimetables();
+  let hasOneElement = false;
 
-  if (dates.length === 0) {
-    discardHoursList();
-    return;
-  } else {
-    yearsList.innerHTML = '';
-  }
+  // if (dates.length === 0) {
+  //   discardHoursList();
+  //   return;
+  // } else {
+  //   yearsList.innerHTML = '';
+  // }
+  yearsList.innerHTML = '';
 
   // Create a section for each years
-  datesByWeeks.forEach((value, year) => {
+  timetables.years.forEach(({ weeks }, yearNumber) => {
     const yearSection = document.createElement('details');
     yearSection.classList.add('year-section');
-    yearSection.open = year === currentDateYear;
-    yearSection.id = `year-${year}`;
+    yearSection.open = yearNumber === currentDateYear;
+    yearSection.id = `year-${yearNumber}`;
     const yearSummary = document.createElement('summary');
-    yearSummary.textContent = `Year ${year} ( days)`;
+    yearSummary.textContent = `Year ${yearNumber} ( days)`;
     yearSection.appendChild(yearSummary);
 
     // Create a section for each week in year where there's a know date
-    value.forEach((dates, week) => {
+    weeks.forEach((weeklyTimetables, weekNumber) => {
       const weekSection = document.createElement('details');
       weekSection.classList.add('week-section');
-      weekSection.open = year === currentDateYear && week === currentDateWeek;
-      weekSection.id = `year-${year}-week-${week}`;
+      weekSection.open = yearNumber === currentDateYear && weekNumber === currentDateWeek;
+      weekSection.id = `year-${yearNumber}-week-${weekNumber}`;
       const weekSummary = document.createElement('summary');
       const hoursList = document.createElement('div');
       hoursList.classList.add('hours-list');
-      const weekNumber = timetableManager.getDateWeek(dates[0]);
-      const firstWeekDateStr = formatDate(timetableManager.getWeekStartDate(year, week));
-      const lastWeekDateStr = formatDate(timetableManager.getWeekEndDate(year, week));
-      weekSummary.textContent = `Week ${weekNumber} (${firstWeekDateStr} - ${lastWeekDateStr})`;
+      const firstWeekDateStr = formatDate(timetableManager.getWeekStartDate(yearNumber, weekNumber));
+      const lastWeekDateStr = formatDate(timetableManager.getWeekEndDate(yearNumber, weekNumber));
+      weekSummary.textContent = `Week ${weekNumber} (${firstWeekDateStr} - ${lastWeekDateStr}) => ${weeklyTimetables.weeklyHoursWorked} hours worked`;
 
       // Create date card for each date in week
-      dates.forEach(date => {
+      weeklyTimetables.timetables.forEach((dailyTimetable) => {
+        const date = dailyTimetable.date;
         const hours = timetableManager.getHoursWorked(date);
         const hourItem = document.createElement('div');
         hourItem.classList.add('hours-item');
@@ -116,6 +124,8 @@ function refreshHoursDisplay() {
         hoursList.appendChild(hourItem);
 
         hourItem.addEventListener('click', handleClickOnHoursItem, { passive: true });
+
+        hasOneElement = true;
       });
 
       weekSection.appendChild(weekSummary);
@@ -125,14 +135,6 @@ function refreshHoursDisplay() {
 
     yearsList.appendChild(yearSection);
   });
-
-  function discardHoursList() {
-      yearsList.innerHTML = '<p class="empty-list">No hours tracked yet.</p>';
-  }
-
-  function formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
 }
 
 // Function that update the current date everywhere it's needed
@@ -228,6 +230,10 @@ function updateHoursForCurrentDate() {
   updateHoursForDate(date, hours);
   showStatus(`Set ${hours} hours for ${date.toISOString().split('T')[0]}`);
   hoursInput.value = '';
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().split('T')[0];
 }
 
 // Event listeners

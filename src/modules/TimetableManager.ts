@@ -68,13 +68,20 @@ export class TimetableManager {
     const dailyTimetable = this.getTimetableForDate(date) || this.initDailyTimetable(date);
 
     dailyTimetable.hoursWorked = hours;
+
+    this.refreshWeeklyHoursWorked(date);
   }
 
-  // Get hours worked for a specific date
-  getHoursWorked(date: Date): number {
-    const dailyTimetable = this.getTimetableForDate(date);
+  private refreshWeeklyHoursWorked(date: Date) {
+    const yearNumber = date.getFullYear();
+    const weekNumber = this.getDateWeek(date);
+    const weekMap = this.timetables.years.get(yearNumber)?.weeks.get(weekNumber)!;
 
-    return dailyTimetable?.hoursWorked || 0;
+    let totalHours = 0;
+    weekMap.timetables.forEach(timetable => {
+      totalHours += timetable.hoursWorked;
+    });
+    weekMap.weeklyHoursWorked = totalHours;
   }
 
   // Add activities to timetable
@@ -240,10 +247,29 @@ export class TimetableManager {
     return endOfDay;
   }
 
+  // Get hours worked for a specific date
+  getHoursWorked(date: Date): number {
+    const dailyTimetable = this.getTimetableForDate(date);
+
+    return dailyTimetable?.hoursWorked || 0;
+  }
+
+  // Get timetables
+  getAllTimetables(): Years {
+    return this.timetables;
+  }
+
   // Get hoursByWeekByYear
   getWeek(date: Date): WeeklyTimetables | undefined {
     const year = date.getFullYear();
     const week = this.getDateWeek(date);
     return this.timetables.years.get(year)?.weeks.get(week);
+  }
+
+  // Get hours worked for a specific date
+  getWeeklyHoursWorked(year: number, week: number): number {
+    const weekMap = this.timetables.years.get(year)?.weeks.get(week);
+
+    return weekMap?.weeklyHoursWorked || 0;
   }
 }
