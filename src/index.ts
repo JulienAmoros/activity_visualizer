@@ -1,4 +1,5 @@
 import { DataLoaderFactory } from './modules/DataLoader';
+import { TrelloApi } from './modules/TrelloApi';
 import { TimetableManager } from './modules/TimetableManager';
 import 'vis-timeline/styles/vis-timeline-graph2d.css';
 import './styles.css';
@@ -272,13 +273,25 @@ csvFileInput.addEventListener('change', async (e) => {
 });
 
 trelloImportBtn.addEventListener('click', async () => {
-  if (trelloApiKeyInput.value.trim() === '' ||
-      trelloAuthTokenInput.value.trim() === '' ||
-      trelloUsernameInput.value.trim() === '') {
+  const apiKey = trelloApiKeyInput.value.trim();
+  const authToken = trelloAuthTokenInput.value.trim();
+  const username = trelloUsernameInput.value.trim();
+
+  if (apiKey === '' || authToken === '' || username === '') {
     showStatus('Please enter your Trello API Key, Auth Token, and Username', true);
     trelloImportDetails.open = true;
   } else {
-    console.log("TODO: import trello activity from API");
+    const trello = new TrelloApi(
+      apiKey,
+      authToken,
+      username
+    );
+
+    const activities = await trello.fetchActivities();
+
+    timetableManager.addActivities(activities);
+    refreshHoursDisplay();
+    updateVisualization();
   }
 });
 

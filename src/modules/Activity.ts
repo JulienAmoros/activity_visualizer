@@ -6,5 +6,5 @@ export interface Activity {
   end: Date;
   description?: string;
   location?: string;
-  source?: 'mbox' | 'ical' | 'csv';
+  source?: "mbox" | "ical" | "csv" | "trello";
 }
