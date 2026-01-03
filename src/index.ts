@@ -187,7 +187,7 @@ async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
     }
 
     timetableManager.addActivities(activities);
-    refreshHoursDisplay()
+    refreshHoursDisplay();
     updateVisualization();
   } catch (error) {
     console.error('Error loading file:', error);

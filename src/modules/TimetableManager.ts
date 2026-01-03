@@ -8,9 +8,16 @@ export interface DailyTimetable {
   hoursWorked: number;
 }
 
+type Years = { years: Map<number, Weeks> };
+type Weeks = { weeks: Map<number, WeeklyTimetables> };
+type WeeklyTimetables = {
+  weeklyHoursWorked: number;
+  timetables: Map<string, DailyTimetable>;
+};
+
 // TimetableManager class
 export class TimetableManager {
-  private dailyTimetables: Map<string, DailyTimetable> = new Map();
+  private timetables: Years = { years: new Map() };
   private timeline: Timeline | null = null;
   private currentDate: Date = new Date();
 
@@ -20,55 +27,88 @@ export class TimetableManager {
   }
 
   // Print all daily timetables (for debugging)
-  printDailyTimetables(): void {
+  printHoursByWeekByYear(): void {
     console.log("=== Daily Timetables ===");
-    this.dailyTimetables.forEach((timetable, key) => {
-      console.log(`Date: ${key}, Hours Worked: ${timetable.hoursWorked}, Activities: ${timetable.activities.length}`);
+    this.timetables.years.forEach(({ weeks }, year) => {
+      console.log(`=> Year: ${year}`);
+      weeks.forEach((weeklyTimetables, week) => {
+      console.log(`==> Week: ${week} (Hours Worked: ${weeklyTimetables.weeklyHoursWorked})`);
+        weeklyTimetables.timetables.forEach(timetable => {
+          console.log(`Date: ${timetable.date}, Hours Worked: ${timetable.hoursWorked}, Activities: ${timetable.activities.length}`);
+        });
+      });
     });
+  }
+
+  // Initialize daily timetable for a specific date
+  private initDailyTimetable(date: Date): DailyTimetable {
+    const key = this.getDateKey(date);
+    const yearNumber = date.getFullYear();
+    const weekNumber = this.getDateWeek(date);
+
+    if (! this.timetables.years.get(yearNumber)) {
+      this.timetables.years.set(yearNumber, { weeks: new Map<number, WeeklyTimetables>() });
+    }
+    const year = this.timetables.years.get(yearNumber)!;
+
+    if (! year.weeks.get(weekNumber)) {
+      year.weeks.set(weekNumber, { weeklyHoursWorked: 0, timetables: new Map<string, DailyTimetable>() });
+    }
+    const weekMap = year.weeks.get(weekNumber)!;
+
+    if (! weekMap.timetables.get(key)) {
+      weekMap.timetables.set(key, { date, activities: [], hoursWorked: 0 });
+    }
+
+    return weekMap.timetables.get(key)!;
   }
 
   // Set hours worked for a specific date
   setHoursWorked(date: Date, hours: number): void {
-    const key = this.getDateKey(date);
-    const timetable = this.dailyTimetables.get(key) || {
-      date: new Date(date),
-      activities: [],
-      hoursWorked: 0
-    };
-    timetable.hoursWorked = hours;
-    this.dailyTimetables.set(key, timetable);
+    const dailyTimetable = this.getTimetableForDate(date) || this.initDailyTimetable(date);
+
+    dailyTimetable.hoursWorked = hours;
   }
 
   // Get hours worked for a specific date
   getHoursWorked(date: Date): number {
-    const key = this.getDateKey(date);
-    return this.dailyTimetables.get(key)?.hoursWorked || 0;
+    const dailyTimetable = this.getTimetableForDate(date);
+
+    return dailyTimetable?.hoursWorked || 0;
   }
 
   // Add activities to timetable
   addActivities(activities: Activity[]): void {
     activities.forEach(activity => {
-      const key = this.getDateKey(activity.start);
-      const timetable = this.dailyTimetables.get(key) || {
-        date: new Date(activity.start),
-        activities: [],
-        hoursWorked: 0
-      };
-      timetable.activities.push(activity);
-      this.dailyTimetables.set(key, timetable);
+      const dailyTimetable = this.getTimetableForDate(activity.start) || this.initDailyTimetable(activity.start);
+      const week = this.getWeek(activity.start)!;
+
+      dailyTimetable.activities.push(activity);
     });
   }
 
   // Get timetable for a specific date
   getTimetableForDate(date: Date): DailyTimetable | undefined {
-    return this.dailyTimetables.get(this.getDateKey(date));
+    const yearNumber = date.getFullYear();
+    const weekNumber = this.getDateWeek(date);
+
+    return this.timetables.years.get(yearNumber)?.weeks.get(weekNumber)?.timetables.get(this.getDateKey(date));
   }
 
   // Get all dates with timetables
+  // TODO: refacto to simplify where it's used
   getAllDates(): Date[] {
-    return Array.from(this.dailyTimetables.values())
-      .map(t => t.date)
-      .sort((a, b) => a.getTime() - b.getTime());
+    const dates: Date[] = [];
+
+    this.timetables.years.forEach(({ weeks }) => {
+      weeks.forEach((weeklyTimetables) => {
+        weeklyTimetables.timetables.forEach((dailyTimetable) => {
+          dates.push(dailyTimetable.date);
+        });
+      });
+    });
+
+    return dates.sort((a, b) => a.getTime() - b.getTime());
   }
 
   // Get all dates with timetables grouped by week
@@ -125,7 +165,7 @@ export class TimetableManager {
 
   // Clear all timetables
   clearTimetables(): void {
-    this.dailyTimetables.clear();
+    this.timetables.years.clear();
     if (this.timeline) {
       this.timeline.destroy();
       this.timeline = null;
@@ -134,14 +174,8 @@ export class TimetableManager {
 
   // Update timeline visualization
   updateTimelineDisplay(container: HTMLElement, activities: Activity[]): void {
-    // Prepare items for timeline
-    const filteredActivities = activities.filter(activity => {
-      const endedAtCurrentDate = activity.end >= this.getCurrentDateStartTime() && activity.end <= this.getCurrentDateEndTime();
-      const startedAtCurrentDate = activity.start >= this.getCurrentDateStartTime() && activity.start <= this.getCurrentDateEndTime();
-      return endedAtCurrentDate || startedAtCurrentDate;
-    });
     const items = new DataSet(
-      filteredActivities.map(activity => ({
+      activities.map(activity => ({
         id: activity.id,
         content: activity.title,
         start: activity.start,
@@ -173,6 +207,9 @@ export class TimetableManager {
     this.timeline = new Timeline(container, items, options);
   }
 
+  //
+  //  GETTERS / SETTERS
+  //
   // Get timeline instance
   getTimeline(): Timeline | null {
     return this.timeline;
@@ -180,6 +217,7 @@ export class TimetableManager {
 
   // Set current date in timeline
   setCurrentDate(date: Date): void {
+    date.setHours(12, 0, 0, 0);
     this.currentDate = date;
   }
 
@@ -200,5 +238,12 @@ export class TimetableManager {
     const endOfDay = this.getCurrentDate();
     endOfDay.setHours(23, 59, 59, 999);
     return endOfDay;
+  }
+
+  // Get hoursByWeekByYear
+  getWeek(date: Date): WeeklyTimetables | undefined {
+    const year = date.getFullYear();
+    const week = this.getDateWeek(date);
+    return this.timetables.years.get(year)?.weeks.get(week);
   }
 }
