@@ -16,6 +16,7 @@ const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
 const mboxFileLabel = document.getElementById('mboxFileLabel') as HTMLLabelElement;
 const jsonFileInput = document.getElementById('jsonFile') as HTMLInputElement;
+const mboxImportDetails = document.getElementById('mboxImportOptions') as HTMLDetailsElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
 const emailInput = document.getElementById('emailInput') as HTMLInputElement;
 const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
@@ -268,6 +269,7 @@ mboxFileInput.addEventListener('change', async (e) => {
 
 mboxFileLabel.addEventListener('click', () => {
   if (! emailInput.value.includes('@')) {
+    mboxImportDetails.open = true;
     showStatus("You need to enter your email before importing an MBOX file", true);
   }
 });
