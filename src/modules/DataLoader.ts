@@ -81,6 +81,11 @@ export class ICalLoader implements DataLoader {
 
       vevents.forEach((vevent: any) => {
         const event = new ICAL.Event(vevent);
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+
+        if (event.startDate.toJSDate() > new Date()) { return; } // Skip future events
+        if (event.startDate.toJSDate() < threeYearsAgo) { return; } // Skip events older than 3 years
 
         activities.push({
           id: `ical-${event.uid || Date.now()}`,
