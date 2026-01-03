@@ -24,6 +24,7 @@ const dateInput = document.getElementById('dateInput') as HTMLInputElement;
 const hoursInput = document.getElementById('hoursInput') as HTMLInputElement;
 const setHoursBtn = document.getElementById('setHoursBtn') as HTMLButtonElement;
 const setDayOffBtn = document.getElementById('setDayOffBtn') as HTMLButtonElement;
+const exportBtn = document.getElementById('exportBtn') as HTMLButtonElement;
 const yearsList = document.getElementById('yearsList') as HTMLElement;
 
 // Set default date to today
@@ -308,6 +309,16 @@ dayAfterBtn.addEventListener('click', () => {
   newDate.setDate(currentDate.getDate() + 1);
 
   updateCurrentDate(newDate);
+});
+
+exportBtn.addEventListener('click', () => {
+  const json = timetableManager.exportTimetables();
+
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(json);
+  var dlAnchorElem = document.getElementById('downloadAnchorElem')!;
+  dlAnchorElem.setAttribute("href", dataStr);
+  dlAnchorElem.setAttribute("download", "timetable_export.json");
+  dlAnchorElem.click();
 });
 
 // Initialize

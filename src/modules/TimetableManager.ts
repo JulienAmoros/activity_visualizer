@@ -215,6 +215,25 @@ export class TimetableManager {
   }
 
   //
+  // IMPORT / EXPORT
+  //
+  // Export timetables to JSON
+  exportTimetables(): string {
+    return JSON.stringify(this.timetables, replacer);
+
+    function replacer(key: any, value: any) {
+      if(value instanceof Map) {
+        return {
+          dataType: 'Map',
+          value: Array.from(value.entries()),
+        };
+      } else {
+        return value;
+      }
+    }
+  }
+
+  //
   //  GETTERS / SETTERS
   //
   // Get timeline instance
