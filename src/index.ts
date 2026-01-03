@@ -14,8 +14,10 @@ const timetableManager = new TimetableManager();
 const csvFileInput = document.getElementById('csvFile') as HTMLInputElement;
 const icalFileInput = document.getElementById('icalFile') as HTMLInputElement;
 const mboxFileInput = document.getElementById('mboxFile') as HTMLInputElement;
+const mboxFileLabel = document.getElementById('mboxFileLabel') as HTMLLabelElement;
 const jsonFileInput = document.getElementById('jsonFile') as HTMLInputElement;
 const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
+const emailInput = document.getElementById('emailInput') as HTMLInputElement;
 const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
 const currentDateLabel = document.getElementById('currentDate') as HTMLElement;
 const dayAfterBtn = document.getElementById('dayAfter') as HTMLButtonElement;
@@ -30,6 +32,8 @@ const yearsList = document.getElementById('yearsList') as HTMLElement;
 
 // Set default date to today
 updateCurrentDate(new Date());
+mboxFileInput.disabled = true;
+mboxFileLabel.className = 'file-label disabled';
 
 // Show status message
 function showStatus(message: string, isError: boolean = false) {
@@ -173,11 +177,11 @@ function updateVisualization(date: Date = new Date()) {
 }
 
 // Handle file upload
-async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox') {
+async function handleFileUpload(file: File, fileType: 'csv' | 'ical' | 'mbox', options?: { emailFilter?: string }) {
   try {
     const text = await file.text();
     const loader = DataLoaderFactory.getLoader(fileType);
-    const activities = await loader.load(text);
+    const activities = await loader.load(text, options);
 
     if (activities.length === 0) {
       showStatus('No activities found in the file', true);
@@ -252,8 +256,22 @@ icalFileInput.addEventListener('change', async (e) => {
 mboxFileInput.addEventListener('change', async (e) => {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (file) {
-    await handleFileUpload(file, 'mbox');
+    await handleFileUpload(file, 'mbox', { emailFilter: emailInput.value });
     mboxFileInput.value = ''; // Reset input
+  }
+});
+
+mboxFileLabel.addEventListener('click', () => {
+  if (! emailInput.value.includes('@')) {
+    showStatus("You need to enter your email before importing an MBOX file", true);
+  }
+});
+
+emailInput.addEventListener('change', (e) => {
+  if (emailInput.value.includes('@')) {
+    mboxFileInput.disabled = false;
+    mboxFileLabel.className = 'file-label';
+    emailInput.value = emailInput.value.trim();
   }
 });
 

@@ -28,7 +28,7 @@
                     </div>
                     <div class="file-input-wrapper">
                         <input type="file" id="mboxFile" accept=".mbox">
-                        <label for="mboxFile" class="file-label">📧 Import MBOX</label>
+                        <label for="mboxFile" class="file-label" id="mboxFileLabel" title="Enter your mail below first">📧 Import MBOX</label>
                     </div>
                     <div class="file-import-wrapper">
                         <input type="file" id="jsonFile" accept=".json">
@@ -36,6 +36,8 @@
                     </div>
                     <button id="clearBtn" class="clear-btn">🗑️ Clear All</button>
                 </div>
+                <input type="text" id="emailInput" placeholder="john.doe@company.com" class="email-input">
+                <label for="emailInput" class="file-label" id="emailInputLabel">Enter email for MBOX filtering</label>
             </div>
 
             <div class="timeline-section">

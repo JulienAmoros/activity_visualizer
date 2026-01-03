@@ -3,7 +3,7 @@ import ICAL from 'ical.js';
 
 // Base interface for all loaders
 export interface DataLoader {
-  load(data: string): Promise<Activity[]>;
+  load(data: string, options?: any): Promise<Activity[]>;
 }
 
 // CSV Loader
@@ -104,7 +104,7 @@ export class ICalLoader implements DataLoader {
 export class MBOXLoader implements DataLoader {
   private readonly DEFAULT_EMAIL_DURATION_MINUTES = 10;
 
-  async load(data: string): Promise<Activity[]> {
+  async load(data: string, options?: { emailFilter?: string }): Promise<Activity[]> {
     const activities: Activity[] = [];
 
     // Split mbox into individual messages
@@ -117,8 +117,11 @@ export class MBOXLoader implements DataLoader {
       const subjectMatch = message.match(/^Subject:\s*(.+)$/m);
       const dateMatch = message.match(/^Date:\s*(.+)$/m);
       const fromMatch = message.match(/^From:\s*(.+)$/m);
+      const toMatch = message.match(/^To:\s*(.+)$/m);
 
-      if (subjectMatch && dateMatch) {
+      if (subjectMatch && dateMatch && fromMatch) {
+        if (options?.emailFilter && ! fromMatch[1].includes(options.emailFilter)) { continue; }
+
         const date = new Date(dateMatch[1]);
         const startDate = new Date(date);
         startDate.setMinutes(date.getMinutes() - this.DEFAULT_EMAIL_DURATION_MINUTES);
@@ -128,7 +131,7 @@ export class MBOXLoader implements DataLoader {
           title: subjectMatch[1].trim(),
           start: startDate,
           end: date,
-          description: fromMatch ? `From: ${fromMatch[1]}` : '',
+          description: toMatch ? `To: ${toMatch[1]}` : '',
           location: 'Email',
           source: 'mbox'
         });

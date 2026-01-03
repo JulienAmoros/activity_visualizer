@@ -98,7 +98,13 @@ body {
                             font-weight: 500;
                         }
 
-                        .file-label:hover {
+                        .file-label.disabled {
+                            background: #aaa;
+                            cursor: not-allowed;
+                            box-shadow: none;
+                        }
+
+                        .file-label:hover:not(.disabled) {
                             background: #5568d3;
                             transform: translateY(-2px);
                             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
@@ -143,6 +149,15 @@ body {
                         transform: translateY(-2px);
                         box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
                     }
+                }
+
+                .email-input {
+                    padding: 10px;
+                    border: 2px solid #ddd;
+                    border-radius: 6px;
+                    font-size: 1em;
+                    transition: border-color 0.3s ease;
+                    margin-top: 10px;
                 }
             }
 
