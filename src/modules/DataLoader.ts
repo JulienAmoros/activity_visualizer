@@ -84,7 +84,7 @@ export class ICalLoader implements DataLoader {
 
         activities.push({
           id: `ical-${event.uid || Date.now()}`,
-          title: event.summary || 'Untitled Event',
+          title: `Cal: ${event.summary}` || 'Untitled Event',
           start: event.startDate.toJSDate(),
           end: event.endDate.toJSDate(),
           description: event.description || '',
@@ -128,7 +128,7 @@ export class MBOXLoader implements DataLoader {
 
         activities.push({
           id: `mbox-${Date.now()}-${i}`,
-          title: subjectMatch[1].trim(),
+          title: `Mail: ${subjectMatch[1].trim()}`,
           start: startDate,
           end: date,
           description: toMatch ? `To: ${toMatch[1]}` : '',
