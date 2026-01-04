@@ -25,11 +25,11 @@
                     <button id="trelloImportBtn" class="import-btn">🔗 Trello import</button>
                     <div class="file-input-wrapper">
                         <input type="file" id="icalFile" accept=".ics,.ical">
-                        <label for="icalFile" class="file-label">📆 Import iCal</label>
+                        <label for="icalFile" class="file-label">📆 Import Calendar</label>
                     </div>
                     <div class="file-input-wrapper">
                         <input type="file" id="mboxFile" accept=".mbox">
-                        <label for="mboxFile" class="file-label" id="mboxFileLabel" title="Enter your mail below first">📧 Import MBOX</label>
+                        <label for="mboxFile" class="file-label" id="mboxFileLabel" title="Enter your mail below first">📧 Import Mails</label>
                     </div>
                     <div class="file-import-wrapper">
                         <input type="file" id="jsonFile" accept=".json">
@@ -53,6 +53,83 @@
                     <input type="text" id="trelloAuthToken" placeholder="Your Trello Authentication Token" class="trello-api-key-input">
                     <label for="trelloUsername" class="trello-creds-label" id="trelloUsernameLabel">Enter your Trello Username</label>
                     <input type="text" id="trelloUsername" placeholder="Your Trello Username" class="trello-api-key-input">
+                </details>
+
+                <details class="collapsable-section">
+                    <summary>Instructions & How to</summary>
+
+                    <details class="collapsable-section">
+                    <summary>CSV import</summary>
+                        For test purposes, or custom import, you probably ain't going to need this.<br>
+                        <br>
+                        CSV format: [title(string), start(ISODateString), endStr(ISODateString), description(string), location(string)]
+                    </details>
+
+                    <details class="collapsable-section">
+                    <summary>Trello import</summary>
+                        This option allows you to import your Trello activities directly into the visualizer.<br>
+                        <br>
+                        1. Get your trello API crdentials (<a href="https://www.merge.dev/blog/trello-api-key">see instructions to get them here</a>)<br>
+                        2. Provide your Trello API Key, Authentication Token, and Username.<br>
+                        3. Once you have provided these credentials, click on the "Trello import" button to fetch, import and visualize your Trello activities.<br>
+                        <br>
+                        ⚠️ As of now, only 1000 last comments are fetched, you may miss some older activities.
+                    </details>
+
+                    <details class="collapsable-section">
+                    <summary>iCal import</summary>
+                        This option allows you to import any calendar activities (iCal format) into the visualizer.<br>
+                        <br>
+                        Example with Google Calendar:<br>
+                        1. Go to <a href="https://calendar.google.com/calendar/u/0/r/settings/export">Google Calendar settings</a> (Settings > Import and Export).<br>
+                        2. Click on Export, it downloads a ZIP file.<br>
+                        3. Unzip the downloaded file to get the .ics files for each of your calendars (the file you want should be named "`your_email_address`.ics").<br>
+                        4. Use the "Import Calendar" button to select and import the .ics file into the visualizer.<br>
+
+                        Note: Only events from the last 3 years are imported to keep the data relevant.
+                    </details>
+
+                    <details class="collapsable-section">
+                    <summary>MBOX import</summary>
+                        This option allows you to import your email activities from an MBOX file into the visualizer.<br>
+                        <br>
+                        Example with Gmail:<br>
+                        1. Go to <a href="https://takeout.google.com/settings/takeout">Google Takeout</a>.<br>
+                        2. Deselect all, then scroll down and select "Mail".<br>
+                        3. Click on "All data are included" button, a popup opens, uncheck "Include all messages" and select only "Sent"<br>
+                        4. Scroll to the end of the page and click on "Next step", then "Create export".<br>
+                        5. Once the export is ready, download the ZIP file and extract it.<br>
+                        6. Inside the extracted folder, locate the "Sent.mbox" file.<br>
+                        7. Put your email address in the MBOX import options field to keep only emails sent by you.<br>
+                        8. Use the "Import Mails" button to select and import the .mbox file into the visualizer.<br>
+
+                        Note: Only emails from the last 3 years are imported to keep the data relevant.
+                    </details>
+
+                    <details class="collapsable-section">
+                    <summary>JSON import / Export</summary>
+                        This option allows you to export your current activities and hours worked data as a JSON file for backup or further analysis.<br>
+                        <br>
+                        To export your data, simply click on the "Export JSON" button in the "Global Hours Tracker" section.<br>
+                        <br>
+                        To import previously exported data, use the "Import JSON" button in the "Import Activities" section and select your JSON file.<br>
+                        <br>
+                        ⚠️ Exported file contains your activities and hours worked data, therefore <b>it may contain personal and confidential data.</b><br>
+                        ⚠️ Note that importing a JSON file will replace all current data in the visualizer with the data from the file.<br>
+                    </details>
+
+                    <details class="collapsable-section">
+                    <summary>How to use this?</summary>
+                        1. Import your activities using the provided import options (CSV, Trello, iCal, MBOX).<br>
+                        2. Navigate through the activity timeline using the date selector.<br>
+                        3. Once you selected some date, set the number of hours worked or mark days off as needed (this sets the number of hours to a default value). You can enter hours on dates with no Activity.<br>
+                        4. Track your global hours worked in the dedicated section.<br>
+                        5. Export your data as JSON for backup or further analysis.<br>
+
+                        ⚠️ <b>Data is not stored locally</b>, make sure to export your data (you can use the JSON export button below) before closing the app! ⚠️
+
+                        ProTip: Once you've imported some data, you can click on the day in hours tracker to quickly navigate to that date in the timeline.
+                    </details>
                 </details>
             </div>
 

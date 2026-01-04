@@ -175,6 +175,7 @@ body {
 
                 .collapsable-section {
                     margin-top: 15px;
+                    padding-left: 16px;
                     text-align: left;
 
                     summary {
