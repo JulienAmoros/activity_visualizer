@@ -189,7 +189,7 @@ export class TimetableManager {
         content: activity.title,
         start: activity.start,
         end: activity.end,
-        title: `${activity.title}\n${activity.description || ''}`.substring(0, MAX_CARD_TITLE_LENGTH),
+        title: buildTitle(activity),
         className: `activity-${activity.source}`
       }))
     );
@@ -214,6 +214,15 @@ export class TimetableManager {
       this.timeline.destroy();
     }
     this.timeline = new Timeline(container, items, options);
+
+    function buildTitle(activity: Activity): string {
+      const title = `${activity.title}\n${activity.description || ''}`;
+      if (activity.title.length > MAX_CARD_TITLE_LENGTH) {
+        return `${title.substring(0, MAX_CARD_TITLE_LENGTH)} ...`;
+      }
+
+      return title;
+    }
   }
 
   //
