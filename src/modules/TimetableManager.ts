@@ -15,6 +15,8 @@ type WeeklyTimetables = {
   timetables: Map<string, DailyTimetable>;
 };
 
+const MAX_CARD_TITLE_LENGTH = 100;
+
 // TimetableManager class
 export class TimetableManager {
   private timetables: Years = { years: new Map() };
@@ -187,7 +189,7 @@ export class TimetableManager {
         content: activity.title,
         start: activity.start,
         end: activity.end,
-        title: `${activity.title}\n${activity.description || ''}`,
+        title: `${activity.title}\n${activity.description || ''}`.substring(0, MAX_CARD_TITLE_LENGTH),
         className: `activity-${activity.source}`
       }))
     );

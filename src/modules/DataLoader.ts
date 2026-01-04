@@ -87,12 +87,15 @@ export class ICalLoader implements DataLoader {
         if (event.startDate.toJSDate() > new Date()) { return; } // Skip future events
         if (event.startDate.toJSDate() < threeYearsAgo) { return; } // Skip events older than 3 years
 
+        const title = `Cal: ${(event.summary || 'Untitled Event')}`;
+        const description = event.description || '';
+
         activities.push({
-          id: `ical-${event.uid || Date.now()}`,
-          title: `Cal: ${event.summary}` || 'Untitled Event',
+          id: `ical-${Date.now()}-${event.uid || Date.now()}`,
+          title,
           start: event.startDate.toJSDate(),
           end: event.endDate.toJSDate(),
-          description: event.description || '',
+          description,
           location: event.location || '',
           source: 'ical'
         });
