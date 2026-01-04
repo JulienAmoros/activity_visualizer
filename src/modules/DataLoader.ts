@@ -131,8 +131,12 @@ export class MBOXLoader implements DataLoader {
         if (options?.emailFilter && ! fromMatch[1].includes(options.emailFilter)) { continue; }
 
         const date = new Date(dateMatch[1]);
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
         const startDate = new Date(date);
         startDate.setMinutes(date.getMinutes() - this.DEFAULT_EMAIL_DURATION_MINUTES);
+
+        if (date < threeYearsAgo) { continue; } // Skip events older than 3 years
 
         activities.push({
           id: `mbox-${Date.now()}-${i}`,
