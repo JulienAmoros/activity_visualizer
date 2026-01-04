@@ -34,7 +34,9 @@ jobs:
       with:
         node-version: 22.x
     - name: Build with Webpack
-      run: npm run build
+      run: |
+        npm ci
+        npm run build
     - name: Upload generated files as artifact
       uses: actions/upload-pages-artifact@v3
       with:
