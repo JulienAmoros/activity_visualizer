@@ -69,10 +69,41 @@
                     <summary>Trello import</summary>
                         This option allows you to import your Trello activities directly into the visualizer.<br>
                         <br>
-                        1. Get your trello API crdentials (<a href="https://www.merge.dev/blog/trello-api-key">see instructions to get them here</a>)<br>
-                        2. Provide your Trello API Key, Authentication Token, and Username.<br>
-                        3. Once you have provided these credentials, click on the "Trello import" button to fetch, import and visualize your Trello activities.<br>
+                        1. Get your trello API credentials<br>
+                        - Go to <a href="https://trello.com/power-ups/admin">Trello Power-ups page</a> to get your API Key and generate and Authentication Token.<br>
+                        - Click on "new" <br>
                         <br>
+                        <image src="./assets/trello/step1.png" height="300px" width="700px"><br>
+                        <br>
+                        - Create a new power-ups, fill the form like below and click "Create"<br>
+                        <br>
+                        <image src="./assets/trello/step2.png" height="500px" width="900px"><br>
+                        <br>
+                        - Click on "Generate a new API Key"<br>
+                        <br>
+                        <image src="./assets/trello/step3.png" height="300px" width="700px"><br>
+                        <br>
+                        - Copy the API key<br>
+                        <br>
+                        <image src="./assets/trello/step4.png" height="300px" width="700px"><br>
+                        <br>
+                        - Paste the key in the following link (replace "{YourAPIKey}" with the API key): <code>https://trello.com/1/authorize?expiration=1day&scope=read&response_type=token&key={YourAPIKey}</code></code><br>
+                        <br>
+                        - Access this link and click on "Authorize"<br>
+                        <br>
+                        <image src="./assets/trello/step5.png"><br>
+                        <br>
+                        - Copy the Authentication Token, it will be valid for only one day<br>
+                        - ⚠️ DO NOT SHARE this Authentication Token with anyone ⚠️<br>
+                        <br>
+                        <image src="./assets/trello/step6.png"><br>
+                        <br>
+                        - Copy the API key and Authentication token (see screenshot below)<br>
+                        - Put your trello username<br>
+                        - Finally, click on the button "Trello Import"<br>
+                        <br>
+                        <image src="./assets/trello/step7.png" height="400px" width="700px"><br>
+
                         ⚠️ As of now, only 1000 last comments are fetched, you may miss some older activities.
                     </details>
 
