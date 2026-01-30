@@ -280,7 +280,7 @@ export class TimetableManager {
 
     function buildTitle(activity: Activity): string {
       const title = `${activity.title}\n${activity.description || ''}`;
-      if (activity.title.length > MAX_CARD_TITLE_LENGTH) {
+      if (title.length > MAX_CARD_TITLE_LENGTH) {
         return `${title.substring(0, MAX_CARD_TITLE_LENGTH)} ...`;
       }
 
