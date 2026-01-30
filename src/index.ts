@@ -278,7 +278,7 @@ function updateHoursForCurrentDate() {
 }
 
 function formatDate(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 // Event listeners

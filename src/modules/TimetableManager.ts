@@ -26,7 +26,7 @@ export class TimetableManager {
 
   // Get date key for map
   private getDateKey(date: Date): string {
-    return date.toISOString().split('T')[0];
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 
   // Print all daily timetables (for debugging)
@@ -46,11 +46,11 @@ export class TimetableManager {
   printHoursByDate(date: Date): void {
     const dailyTimetable = this.getTimetableForDate(date);
     if (dailyTimetable) {
-      console.log(`Date: ${dailyTimetable.date.toISOString().split('T')[0]}`);
+      console.log(`Date:`, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
       console.log(`Hours Worked:`, dailyTimetable.hoursWorked);
       console.log(`Activities:`, dailyTimetable.activities);
     } else {
-      console.log(`No timetable found for date: ${date.toISOString().split('T')[0]}`);
+      console.log(`No timetable found for date:`, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
     }
   }
 
@@ -102,7 +102,9 @@ export class TimetableManager {
   addActivities(activities: Activity[]): void {
     activities.forEach(activity => {
       const dailyTimetable = this.getTimetableForDate(activity.start) || this.initDailyTimetable(activity.start);
-      const week = this.getWeek(activity.start)!;
+
+      console.log(`Adding activity`, activity);
+      console.log(`Date:`, this.getDateKey(activity.start));
 
       dailyTimetable.activities.push(activity);
     });
