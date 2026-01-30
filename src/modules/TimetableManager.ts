@@ -1,6 +1,5 @@
-import { time } from 'node:console';
 import { Activity } from './Activity';
-import { Timeline, TimelineOptions, DataSet } from 'vis-timeline/standalone';
+import { Timeline, TimelineItem, TimelineOptions, DataSet, DateType, IdType } from 'vis-timeline/standalone';
 
 // Timetable data structure
 export interface DailyTimetable {
@@ -102,9 +101,6 @@ export class TimetableManager {
   addActivities(activities: Activity[]): void {
     activities.forEach(activity => {
       const dailyTimetable = this.getTimetableForDate(activity.start) || this.initDailyTimetable(activity.start);
-
-      console.log(`Adding activity`, activity);
-      console.log(`Date:`, this.getDateKey(activity.start));
 
       dailyTimetable.activities.push(activity);
     });
@@ -261,6 +257,9 @@ export class TimetableManager {
 
     // Timeline options
     const options: TimelineOptions = {
+      editable: {
+        remove: true
+      },
       height: '300px',
       margin: {
         item: 10,
@@ -268,7 +267,9 @@ export class TimetableManager {
       },
       max: this.getCurrentDateEndTime(),
       min: this.getCurrentDateStartTime(),
+      onRemove: onRemove(this),
       orientation: 'top',
+      selectable: true,
       stack: true,
       zoomMin: 4 * 1000 * 60 * 60, // 4 hours
       zoomMax: 1000 * 60 * 60 * 24, // 1 day
@@ -289,6 +290,23 @@ export class TimetableManager {
 
       return title;
     }
+
+    function onRemove(timetableManager: TimetableManager) {
+      return (item: TimelineItem, callback: (item: TimelineItem) => void) => {
+        timetableManager.removeItemByDateAndId(item.start, item.id);
+
+        callback(item);
+      }
+    }
+  }
+
+  removeItemByDateAndId(date: DateType, id: IdType) {
+    const timetable = this.getTimetableForDate(date as Date);
+
+    if (timetable) {
+      timetable.activities = timetable.activities.filter(activity => activity.id !== id);
+    }
+
   }
 
   //

@@ -162,14 +162,11 @@ function updateCurrentDate(newDate: Date) {
   updateVisualization(newDate);
 
   function updateCumulatedActivitiesTimeForDate(date: Date) {
-    // console.log('Updating cumulated activities time for date:', newDate);
-    // timetableManager.printHoursByDate(newDate);
     const totalTime = timetableManager.getCumulatedActivitiesTimeForDate(newDate);
     cumulatedTimeLabel.innerHTML = `${totalTime.toFixed(2)} hours`;
   }
 
   function updateWorkedTimeForDate(date: Date) {
-    console.log('Updating estimated hours worked for date:', newDate);
     timetableManager.printHoursByDate(newDate);
     const estimatedHours = timetableManager.getEstimatedWorkedTimeForDate(newDate);
     estimatedHoursWorkedLabel.innerHTML = `${estimatedHours.toFixed(2)} hours`;
