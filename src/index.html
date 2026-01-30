@@ -38,23 +38,6 @@
                     <button id="clearBtn" class="clear-btn">🗑️ Clear All</button>
                 </div>
 
-                <details class="collapsable-section" id="mboxImportOptions">
-                    <summary>MBOX import options</summary>
-                    <input type="text" id="emailInput" placeholder="john.doe@company.com" class="email-input">
-                    <label for="emailInput" class="file-label" id="emailInputLabel">Enter email for MBOX filtering</label>
-                </details>
-
-                <details class="collapsable-section" id="trelloImportOptions">
-                    <summary>Trello credentials</summary>
-
-                    <label for="trelloApiKey" class="trello-creds-label" id="trelloApiKeyLabel">Enter your Trello API Key</label>
-                    <input type="text" id="trelloApiKey" placeholder="Your Trello API Key" class="trello-api-key-input">
-                    <label for="trelloAuthToken" class="trello-creds-label" id="trelloAuthTokenLabel">Enter your Trello Authentication Token</label>
-                    <input type="text" id="trelloAuthToken" placeholder="Your Trello Authentication Token" class="trello-api-key-input">
-                    <label for="trelloUsername" class="trello-creds-label" id="trelloUsernameLabel">Enter your Trello Username</label>
-                    <input type="text" id="trelloUsername" placeholder="Your Trello Username" class="trello-api-key-input">
-                </details>
-
                 <details class="collapsable-section">
                     <summary>Instructions & How to</summary>
 
@@ -126,13 +109,29 @@
                         <br>
                         Example with Gmail:<br>
                         1. Go to <a href="https://takeout.google.com/settings/takeout" target="_blank">Google Takeout</a>.<br>
-                        2. Deselect all, then scroll down and select "Mail".<br>
-                        3. Click on "All data are included" button, a popup opens, uncheck "Include all messages" and select only "Sent"<br>
+                        2. Deselect all, then scroll down to "Mails".<br>
+                        <br>
+                        <image src="./assets/google/step1.png"><br>
+                        <br>
+                        3. Salect only "Mails" and then click on "All data are included" button (it may take few seconds to appear), a popup opens, uncheck "Include all messages" and select only "Sent"<br>
+                        <br>
+                        <image src="./assets/google/step2.png"><br>
+                        <br>
+                        <image src="./assets/google/step3.png"><br>
+                        <br>
                         4. Scroll to the end of the page and click on "Next step", then "Create export".<br>
-                        5. Once the export is ready, download the ZIP file and extract it.<br>
-                        6. Inside the extracted folder, locate the "Sent.mbox" file.<br>
-                        7. Put your email address in the MBOX import options field to keep only emails sent by you.<br>
-                        8. Use the "Import Mails" button to select and import the .mbox file into the visualizer.<br>
+                        <br>
+                        <image src="./assets/google/step5.png"><br>
+                        <br>
+                        <image src="./assets/google/step6.png"><br>
+                        <br>
+                        5. Once the export is ready, go to your <a href="https://drive.google.com/drive/my-drive" target="_blank">drive</a>, there will be a new "Takeout" folder, download the ZIP file inside it and extract it locally.<br>
+                        6. Inside the extracted folder, locate the ".mbox" file. It should be in "Takeout > Mail" folder.<br>
+                        7. Put your email address in the MBOX import options field to keep only emails sent by you (see screenshot below).<br>
+                        8. Use the "Import Mails" button to select and import the ".mbox" file into the visualizer.<br>
+                        <br>
+                        <image src="./assets/google/step7.png"><br>
+                        <br>
 
                         Note: Only emails from the last 3 years are imported to keep the data relevant.
                     </details>
@@ -161,6 +160,23 @@
 
                         ProTip: Once you've imported some data, you can click on the day in hours tracker to quickly navigate to that date in the timeline.
                     </details>
+                </details>
+
+                <details class="collapsable-section" id="mboxImportOptions">
+                    <summary>MBOX import options</summary>
+                    <input type="text" id="emailInput" placeholder="john.doe@company.com" class="email-input">
+                    <label for="emailInput" class="file-label" id="emailInputLabel">Enter email for MBOX filtering</label>
+                </details>
+
+                <details class="collapsable-section" id="trelloImportOptions">
+                    <summary>Trello credentials</summary>
+
+                    <label for="trelloApiKey" class="trello-creds-label" id="trelloApiKeyLabel">Enter your Trello API Key</label>
+                    <input type="text" id="trelloApiKey" placeholder="Your Trello API Key" class="trello-api-key-input">
+                    <label for="trelloAuthToken" class="trello-creds-label" id="trelloAuthTokenLabel">Enter your Trello Authentication Token</label>
+                    <input type="text" id="trelloAuthToken" placeholder="Your Trello Authentication Token" class="trello-api-key-input">
+                    <label for="trelloUsername" class="trello-creds-label" id="trelloUsernameLabel">Enter your Trello Username</label>
+                    <input type="text" id="trelloUsername" placeholder="Your Trello Username" class="trello-api-key-input">
                 </details>
             </div>
 
