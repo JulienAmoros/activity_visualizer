@@ -281,7 +281,8 @@ export class TimetableManager {
     this.timeline = new Timeline(container, items, options);
 
     function buildTitle(activity: Activity): string {
-      const title = `${activity.title}\n${activity.description || ''}`;
+      const duration = (activity.end.getTime() - activity.start.getTime()) / (1000 * 60 * 60); // in hours
+      const title = `${duration.toFixed(2)}h - ${activity.title}\n${activity.description || ''}`;
       if (title.length > MAX_CARD_TITLE_LENGTH) {
         return `${title.substring(0, MAX_CARD_TITLE_LENGTH)} ...`;
       }
