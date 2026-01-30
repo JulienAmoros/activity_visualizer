@@ -1,3 +1,4 @@
+import { time } from 'node:console';
 import { Activity } from './Activity';
 import { Timeline, TimelineOptions, DataSet } from 'vis-timeline/standalone';
 
@@ -40,6 +41,17 @@ export class TimetableManager {
         });
       });
     });
+  }
+
+  printHoursByDate(date: Date): void {
+    const dailyTimetable = this.getTimetableForDate(date);
+    if (dailyTimetable) {
+      console.log(`Date: ${dailyTimetable.date.toISOString().split('T')[0]}`);
+      console.log(`Hours Worked:`, dailyTimetable.hoursWorked);
+      console.log(`Activities:`, dailyTimetable.activities);
+    } else {
+      console.log(`No timetable found for date: ${date.toISOString().split('T')[0]}`);
+    }
   }
 
   // Initialize daily timetable for a specific date
@@ -102,6 +114,57 @@ export class TimetableManager {
     const weekNumber = this.getDateWeek(date);
 
     return this.timetables.years.get(yearNumber)?.weeks.get(weekNumber)?.timetables.get(this.getDateKey(date));
+  }
+
+  getCumulatedActivitiesTimeForDate(date: Date): number {
+    const dailyTimetable = this.getTimetableForDate(date);
+    if (! dailyTimetable) {
+      return 0;
+    }
+
+    let totalTime = 0;
+    dailyTimetable.activities.forEach(activity => {
+      const startTime = activity.start.getTime();
+      const endTime = activity.end.getTime();
+      totalTime += (endTime - startTime);
+    });
+
+    return totalTime / (1000 * 60 * 60); // convert to hours
+  }
+
+  getEstimatedWorkedTimeForDate(date: Date): number {
+    const dailyTimetable = this.getTimetableForDate(date);
+    if (! dailyTimetable) {
+      return 0;
+    }
+
+    const activitiesToMerge = [...dailyTimetable.activities.map(({ start, end }) => ({ start, end }))];
+    activitiesToMerge.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const activityTimeframes = [activitiesToMerge[0]];
+    while (activitiesToMerge.length > 0) {
+      const activityToMerge = activitiesToMerge.pop()!;
+      const lastActivityTimeframe = activityTimeframes[activityTimeframes.length - 1];
+
+      if ( // when activity to merge overlaps the end of the timeframe
+        activityToMerge.start.getTime() <= lastActivityTimeframe.end.getTime()
+        && activityToMerge.end.getTime() >= lastActivityTimeframe.end.getTime()
+      ) {
+        lastActivityTimeframe.end = activityToMerge.end;
+      } else if ( // when activity to merge does not overlap the start of the timeframe
+        activityToMerge.start.getTime() >= lastActivityTimeframe.end.getTime()
+      ) {
+        activityTimeframes.push(activityToMerge);
+      }
+    }
+
+    let totalTime = 0;
+    activityTimeframes.forEach(activity => {
+      const startTime = activity.start.getTime();
+      const endTime = activity.end.getTime();
+      totalTime += (endTime - startTime);
+    });
+
+    return totalTime / (1000 * 60 * 60); // convert to hours
   }
 
   // Get all dates with timetables

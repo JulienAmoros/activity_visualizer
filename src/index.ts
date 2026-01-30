@@ -28,6 +28,8 @@ const emailInput = document.getElementById('emailInput') as HTMLInputElement;
 const dayBeforeBtn = document.getElementById('dayBefore') as HTMLButtonElement;
 const currentDateLabel = document.getElementById('currentDate') as HTMLElement;
 const dayAfterBtn = document.getElementById('dayAfter') as HTMLButtonElement;
+const cumulatedTimeLabel = document.getElementById('cumulatedTime') as HTMLElement;
+const estimatedHoursWorkedLabel = document.getElementById('estimatedHoursWorked') as HTMLElement;
 const visualization = document.getElementById('visualization') as HTMLElement;
 const statusDiv = document.getElementById('status') as HTMLElement;
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -155,7 +157,23 @@ function updateCurrentDate(newDate: Date) {
   updateDatePickerDate(newDate)
   updateCurrentDateLabel(newDate);
   updateTimetableCurrentDate(newDate);
+  updateCumulatedActivitiesTimeForDate(newDate);
+  updateWorkedTimeForDate(newDate);
   updateVisualization(newDate);
+
+  function updateCumulatedActivitiesTimeForDate(date: Date) {
+    // console.log('Updating cumulated activities time for date:', newDate);
+    // timetableManager.printHoursByDate(newDate);
+    const totalTime = timetableManager.getCumulatedActivitiesTimeForDate(newDate);
+    cumulatedTimeLabel.innerHTML = `${totalTime.toFixed(2)} hours`;
+  }
+
+  function updateWorkedTimeForDate(date: Date) {
+    console.log('Updating estimated hours worked for date:', newDate);
+    timetableManager.printHoursByDate(newDate);
+    const estimatedHours = timetableManager.getEstimatedWorkedTimeForDate(newDate);
+    estimatedHoursWorkedLabel.innerHTML = `${estimatedHours.toFixed(2)} hours`;
+  }
 
   function updateDatePickerDate(date: Date) {
     dateInput.valueAsDate = date;
